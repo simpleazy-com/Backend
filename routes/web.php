@@ -19,4 +19,25 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+Route::redirect('home','dashboard'); //Kudu teang auth route
+
+Route::middleware(['auth'])->group(function(){
+    Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+    Route::get('/profile', 'ProfileController@profile');
+
+    Route::get('/group', 'GroupController@groupList');
+    Route::get('/group/create', 'GroupController@createView');
+    Route::post('/group/create', 'GroupController@create');
+    Route::get('/group/{id}', 'GroupController@groupDetail')->where('id', '[0-9999999]+'); //Kemungkinan aya bug konyol
+
+    Route::get('/group/join', 'GroupController@joinView');
+
+    Route::post('/group/join', 'GroupController@join')->middleware(['isValidCode','groupMode']);
+
+    Route::middleware(['isOwner'])->group(function(){
+        Route::get('/group/{id}/edit', function(){
+            return 'Horay youre an administrator';
+        });
+    });
+});
+
