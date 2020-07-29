@@ -17,6 +17,7 @@ class CreateTableMember extends Migration
             $table->id();
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('group_id')->unsigned();
+            $table->boolean('isAdmin')->default(false);
             $table->timestamps();
         });
     }

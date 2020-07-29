@@ -13,9 +13,10 @@ class IsOwner
 {
     public function handle($request, Closure $next)
     {
-        $group_id = $request->route('id'); 
-        if(! Admin::where('group_id', $group_id)->where('user_id', Auth::user()->id)->first()){
-            return response()->json(['Access Forbidden'], 403);
+        $owner = Admin::where('user_id', Auth::user()->id)->first();
+        
+        if(! $owner->role == 'owner' ){
+            return response()->json(['message' => 'Access Forbidden'], 403);
         }
 
         return $next($request);

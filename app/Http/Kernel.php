@@ -66,5 +66,7 @@ class Kernel extends HttpKernel
         'isValidCode' => \App\Http\Middleware\IsValidCode::class,
         'groupMode' => \App\Http\Middleware\CheckGroupMode::class,
         'isOwner' => \App\Http\Middleware\IsOwner::class,
+        'isAdmin' => \App\Http\Middleware\IsAdmin::class,
+        'checkAdmin' => \App\Http\Middleware\CheckAdmin::class,
     ];
 }

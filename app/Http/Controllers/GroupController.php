@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 use App\Group;
@@ -21,13 +22,15 @@ class GroupController extends Controller
     }
 
     public function createView(){
-        return view('pages.createGroup');
+        $mode = ['invite mode', 'opened', 'closed'];
+        return view('pages.createGroup', compact('mode'));
     }
 
     public function create(Request $request){
         $validated = Validator::make($request->all(), [
             'name' => 'string|required|max:50',
-            'description' => 'string|required|max:100'
+            'description' => 'string|required|max:100',
+            'mode' => 'string'
         ]);
 
         if($validated->fails()){
@@ -38,15 +41,16 @@ class GroupController extends Controller
         $group->name = $request->get('name');
         $group->description = $request->get('description');
         $group->code = Str::random(8);
+        $group->mode = $request->get('mode');
         $group->save();
 
-        $admin = new Admin();
-        $admin->user_id = Auth::user()->id;
-        $admin->group_id = $group->id;
-        $admin->role = 'admin';
-        $admin->save();
+        $owner = new Admin();
+        $owner->user_id = Auth::user()->id;
+        $owner->group_id = $group->id;
+        $owner->role = 'owner';
+        $owner->save();
 
-        return response()->json(compact('group','admin'), 201);
+        return response()->json(compact('group','owner'), 201);
         
     }
 
@@ -84,5 +88,17 @@ class GroupController extends Controller
 
         return response()->json(compact('group','member'), 201);
 
+    }
+
+    public function memberList($id){
+        $group = Group::find($id);
+        if($group->member[0]->status == 'accepted'){
+            return $group->member;
+        }else{
+            return 'No one here';
+        }
+        
+        // Raw queries debugger lol
+        // return DB::table('members')->join('groups','members.group_id','groups.id')->get();
     }
 }

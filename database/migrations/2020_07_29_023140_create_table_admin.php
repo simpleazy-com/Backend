@@ -17,7 +17,7 @@ class CreateTableAdmin extends Migration
             $table->id();
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('group_id')->unsigned();
-            $table->string('role');
+            $table->enum('role', ['owner','admin']);
             $table->timestamps();
         });
     }
