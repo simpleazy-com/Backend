@@ -11,4 +11,8 @@ class Member extends Model
     public function groups(){
         return $this->belongsTo('App\Group');
     }
+
+    public function user(){
+        return $this->belongsTo('App\User');
+    }
 }

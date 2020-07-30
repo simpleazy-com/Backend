@@ -15,7 +15,7 @@ class IsOwner
     {
         $owner = Admin::where('user_id', Auth::user()->id)->first();
         
-        if(! $owner->role == 'owner' ){
+        if( $owner->role != 'owner' ){
             return response()->json(['message' => 'Access Forbidden'], 403);
         }
 

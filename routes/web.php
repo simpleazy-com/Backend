@@ -45,6 +45,12 @@ Route::middleware(['auth'])->group(function(){
         // User request to join group with mode 'invite_only'
         Route::get('/group/{id}/pending', 'AdminController@userInPending');
         Route::post('/group/{id}/pending', 'AdminController@userChangeStatus');
+        
+        // Payment routes
+        Route::get('/group/{id}/payment','PaymentController@index');        
+        Route::get('/group/{id}/payment/add','PaymentController@addPaymentView');
+        Route::post('/group/{id}/payment/add','PaymentController@addPayment');
+        
 
         Route::middleware(['isOwner'])->group(function(){
              // Role management

@@ -9,7 +9,7 @@ class Group extends Model
     protected $table = 'groups';
 
     public function admin(){
-        return $this->belongsTo('App\Admin');
+        return $this->hasMany('App\Admin');
     }
 
     public function member(){
