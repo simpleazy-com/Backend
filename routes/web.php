@@ -50,7 +50,14 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/group/{id}/payment','PaymentController@index');        
         Route::get('/group/{id}/payment/add','PaymentController@addPaymentView');
         Route::post('/group/{id}/payment/add','PaymentController@addPayment');
+        Route::post('/group/{id}/payment/{user_id}', 'PaymentController@userDetailPayment');
+
+        Route::get('/group/{id}/payment/{user_id}', 'PaymentController@checkUserPaymentStatus')->where('user_id', '[0-9999999]+');
+        Route::get('/group/{id}/payment/{user_id}/{index_row}', 'PaymentController@userDetailPayment'); //can beres
+        Route::get('/group/{id}/payment/list', 'PaymentController@paymentList');
         
+        // Graph
+        Route::get('/group/{id}/payment/status', 'PaymentController@graph');
 
         Route::middleware(['isOwner'])->group(function(){
              // Role management

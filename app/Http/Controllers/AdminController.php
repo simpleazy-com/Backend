@@ -45,7 +45,11 @@ class AdminController extends Controller
 
     public function userInPending($id){
         // $pending = Member::where('group_id', $id)->get();
-        $data['users'] = DB::table('members')->select(['name','members.user_id'])->join('users','members.user_id','users.id')->where('status','pending')->get();
+        $data['users'] = DB::table('members')
+            ->select(['name','members.user_id'])
+            ->join('users','members.user_id','users.id')
+            ->where('status','pending')
+            ->get();
 
         return view('pages.changeStatus', $data);
     }
@@ -63,21 +67,38 @@ class AdminController extends Controller
         $member = Member::where('user_id', $request->get('user_id'))->first();
         $member->status = $request->get('status');
         $member->save();
+        
+        if($member->status == 'rejected'){
+            Member::where('user_id', $request->get('user_id'))->delete();
+        }
+
         return redirect('/group/'.$request->route('id').'/pending');
 
     }
 
-    public function adminship(){
-        $data['users'] = DB::table('members')->select(['name','members.user_id','members.isAdmin'])->join('users','members.user_id','users.id')->where('status','accepted')->where('isAdmin', true)->get();
-        return $data;
+    public function adminship($id){
+        $data['users'] = DB::table('members')
+            ->select(['name','members.user_id','members.isAdmin'])
+            ->join('users','members.user_id','users.id')
+            ->where('status','accepted')
+            ->where('isAdmin', true)
+            ->where('group_id', $id)
+            ->get();
+
+        return response()->json($data,200);
     }
 
     public function addAdminshipView(){
         // fetch member room
-        // geleh ih panjang urg teu ngarti make eloquent
-        // ke ganti
-        $data['users'] = DB::table('members')->select(['name','members.user_id'])->join('users','members.user_id','users.id')->where('status','accepted')->where('isAdmin', false)->get();
+        $data['users'] = DB::table('members')
+            ->select(['name','members.user_id'])
+            ->join('users','members.user_id','users.id')
+            ->where('status','accepted')
+            ->where('isAdmin', false)
+            ->get();
+
         $data['roles'] = ['admin'];
+        
         return view('pages.addAdminship', $data);
     }
 

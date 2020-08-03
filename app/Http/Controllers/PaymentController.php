@@ -10,11 +10,17 @@ use Auth;
 use App\Group;
 use App\Member;
 use App\SetPayment;
+use App\MemberPaymentStatus;
 
 class PaymentController extends Controller
 {
     public function index($id){
-        $memberList = DB::table('members')->join('users', 'members.user_id','users.id')->select('users.name','users.id')->where('members.status', 'accepted')->get();
+        $memberList = DB::table('members')
+            ->join('users', 'members.user_id','users.id')
+            ->select('users.name','users.id')
+            ->where('members.status', 'accepted')
+            ->where('members.group_id', $id)
+            ->get();
         
         return response()->json($memberList, 200);
     }
@@ -25,7 +31,7 @@ class PaymentController extends Controller
 
     public function addPayment(Request $request){
         $validated = Validator::make($request->all(), [
-            'nominal' => 'numeric'
+            'nominal' => 'required|numeric'
         ]);
 
         if($validated->fails()){
@@ -42,6 +48,18 @@ class PaymentController extends Controller
             $payment->nominal = $request->get('nominal');
             $payment->save();
 
+            // select all member in this group
+            $setPayment = Member::where('group_id', $request->route('id'))->get();
+
+            foreach($setPayment as $sp){
+                $paymentStatus = new MemberPaymentStatus();
+                $paymentStatus->user_id = $sp->user_id;
+                $paymentStatus->payment_id = $payment->id;
+                $paymentStatus->status = 'belum_bayar';
+                $paymentStatus->total = 0;
+                $paymentStatus->save();
+            }
+            
             return response()->json($payment, 201);
         }
 
@@ -53,4 +71,31 @@ class PaymentController extends Controller
 
         return response()->json($payment, 201);
     }
+
+    public function checkUserPaymentStatus($id, $user_id){
+        $listPayment = DB::table('set_payment')
+            ->join('member_payment_status', 'set_payment.id', 'member_payment_status.payment_id')
+            ->select('set_payment.nominal', 'set_payment.index_row')
+            ->where('set_payment.group_id', $id)
+            ->where('member_payment_status.user_id', $user_id)
+            ->get();
+
+        return response()->json($listPayment, 200);
+    }
+
+    public function userDetailPayment($id, $user_id, $index_row){
+        // $detail = DB::table('')
+    }    
+
+    public function paymentList($id){
+        $listPayment = DB::table('set_payment')
+            ->join('member_payment_status', 'set_payment.id', 'member_payment_status.payment_id')
+            ->join('members', 'set_payment.group_id','members.group_id')
+            ->select('members.user_id','set_payment.nominal', 'set_payment.index_row','member_payment_status.status')
+            ->where('set_payment.group_id', $id)
+            ->get();
+            
+        return response()->json($listPayment, 200); 
+    }
+
 }

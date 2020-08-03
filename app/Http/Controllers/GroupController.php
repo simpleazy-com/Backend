@@ -15,10 +15,9 @@ use Auth;
 class GroupController extends Controller
 {
     public function groupList(){
-        // Didieu bisa make raw query atau eloquent serah
-        $adminTable = Admin::where('user_id', Auth::user()->id)->get();
-        // $groupTable = Group::where
-        return response()->json($adminTable, 200);
+        $owned = Admin::where('user_id', Auth::id())->get();
+        $joined = Member::where('user_id', Auth::id())->get();
+        return response()->json(compact('owned','joined'), 200);
     }
 
     public function createView(){
@@ -91,13 +90,13 @@ class GroupController extends Controller
     }
 
     public function memberList($id){
-        $group = Group::find($id);
-        if($group->member[0]->status == 'accepted'){
-            return $group->member;
-        }else{
-            return 'No one here';
-        }
-        
+        $memberList = DB::table('members')
+            ->join('users', 'members.user_id', 'users.id')
+            ->select('users.name', 'members.isAdmin')
+            ->where('group_id', $id)
+            ->get();
+            return response()->json($memberList, 200);
+            
         // Raw queries debugger lol
         // return DB::table('members')->join('groups','members.group_id','groups.id')->get();
     }
