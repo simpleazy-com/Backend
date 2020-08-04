@@ -2,8 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use Illuminate\Support\Facades\Validator;
+
 use App\Group;
 use App\Member;
+use App\Admin;
 
 use Auth;
 
@@ -13,9 +16,22 @@ class CheckGroupMode
 {
     public function handle($request, Closure $next)
     {
+
+        $validated = Validator::make($request->all(), [
+            'code' => 'required'
+        ]);
+
+        if($validated->fails()){
+            return response()->json($validated->errors(), 400);
+        }
+
         $code = $request->get('code');
 
         $group = Group::where('code', $code)->first();
+        // Bug id is not an object
+        if(Admin::where('user_id', Auth::user()->id)->where('group_id', $group->id)->where('role', 'owner')->orWhere('role','admin')->first()){
+           return response()->json(['Redirecting to your room'], 400); 
+        }
         
         
         if($group->mode == 'invite only'){
