@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Group;
+use App\Admin;
+
+use Auth;
+
 class DashboardController extends Controller
 {
     public function __construct()
@@ -18,6 +23,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $id = Admin::where('user_id', Auth::id())->get();
+        return view('home', compact('id'));
     }   
 }
