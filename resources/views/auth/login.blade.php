@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+/*
+okay
+*/
 @section('content')
 <style>
     * {
