@@ -69,13 +69,24 @@ class PaymentController extends Controller
         $payment->nominal = $request->get('nominal');
         $payment->save();
 
+        $setPayment = Member::where('group_id', $request->route('id'))->get();
+
+        foreach($setPayment as $sp){
+            $paymentStatus = new MemberPaymentStatus();
+            $paymentStatus->user_id = $sp->user_id;
+            $paymentStatus->payment_id = $payment->id;
+            $paymentStatus->status = 'belum_bayar';
+            $paymentStatus->total = 0;
+            $paymentStatus->save();
+        }
+
         return response()->json($payment, 201);
     }
 
     public function checkUserPaymentStatus($id, $user_id){
         $listPayment = DB::table('set_payment')
             ->join('member_payment_status', 'set_payment.id', 'member_payment_status.payment_id')
-            ->select('set_payment.nominal', 'set_payment.index_row')
+            ->select('set_payment.nominal', 'set_payment.index_row', 'member_payment_status.status')
             ->where('set_payment.group_id', $id)
             ->where('member_payment_status.user_id', $user_id)
             ->get();

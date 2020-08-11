@@ -18,7 +18,7 @@ class AdminController extends Controller
 
     public function settingsView($id){
         $group = Group::find($id);
-        $mode = ['invite mode', 'opened', 'closed'];
+        $mode = ['invite only', 'opened', 'closed'];
         return view('pages.settings', compact('group','mode'));
     }
 
@@ -39,6 +39,7 @@ class AdminController extends Controller
         $group->name = $request->get('name');
         $group->description = $request->get('description');
         $group->mode = $request->get('mode');
+        $group->save();
 
         return response()->json(compact('group'), 201);
     }

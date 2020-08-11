@@ -15,7 +15,7 @@ use Auth;
 class GroupController extends Controller
 {
     public function groupList(){
-        $owned = Admin::where('user_id', Auth::id())->get();
+        $owned = Admin::where('user_id', Auth::id())->where('role', 'owner')->get();
         $joined = Member::where('user_id', Auth::id())->get();
         return response()->json(compact('owned','joined'), 200);
     }
@@ -64,17 +64,26 @@ class GroupController extends Controller
     }
 
     public function join(Request $request){
+
         $code = $request->get('code');
 
         $group = Group::where('code', $code)->first();
 
         if(Member::where('user_id', Auth::user()->id)->first()){
-            return reponse()->json(['Already Join'], 400);
+            return response()->json(['Already Join'], 400);
         }
 
         if(Admin::where('user_id', Auth::user()->id)->first()){
             return response()->json(['Cannot join to your owned room'], 400);
         }  
+
+        if(Member::where('user_id', Auth::user()->id)
+            ->where('group_id', $group->id)
+            ->whereIn('status', ['pending','accepted'])
+            ->first()    
+        ){
+            return response()->json(['Already Join'], 400);
+        }
 
         try{
             $member = new Member();
@@ -94,6 +103,7 @@ class GroupController extends Controller
             ->join('users', 'members.user_id', 'users.id')
             ->select('users.name', 'members.isAdmin')
             ->where('group_id', $id)
+            ->where('status', 'accepted')
             ->get();
             return response()->json($memberList, 200);
             
