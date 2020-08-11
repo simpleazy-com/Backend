@@ -69,3 +69,4 @@ Route::middleware(['auth'])->group(function(){
 
     });
 });  //HOHOHIHE
+//HOHOHIHE PALAKAU

@@ -21,7 +21,7 @@ class GroupController extends Controller
     }
 
     public function createView(){
-        $mode = ['invite mode', 'opened', 'closed'];
+        $mode = ['invite only', 'opened', 'closed'];
         return view('pages.createGroup', compact('mode'));
     }
 
