@@ -15,9 +15,14 @@ use Auth;
 class GroupController extends Controller
 {
     public function groupList(){
-        $owned = Admin::where('user_id', Auth::id())->where('role', 'owner')->get();
-        $joined = Member::where('user_id', Auth::id())->get();
-        return response()->json(compact('owned','joined'), 200);
+        $data['owned'] = Admin::where('user_id', Auth::id())
+        ->join('groups','admins.group_id','groups.id')
+        ->where('role', 'owner')
+        ->get();
+        $data['joined'] = Member::where('user_id', Auth::id())->get();
+        return 
+        view('pages.group', compact('data'));
+        // response()->json(compact('data'), 200);
     }
 
     public function createView(){
@@ -54,9 +59,18 @@ class GroupController extends Controller
     }
 
     public function groupDetail($id){
-        $group = Group::find($id);
-
-        return response()->json($group, 200);
+        $verif = Admin::where('group_id', $id)
+        ->join('groups','admins.group_id','groups.id')
+        ->where('admins.user_id',Auth::user()->id)
+        ->get();
+        if(!sizeof($verif) == 0){
+            $group = Group::find($verif[0]->id);
+        }else{
+            $group = "Access Probidden";
+        }
+        return 
+        view('pages.detailGroup',compact('group'));
+        // response()->json($group, 200);
     }
 
     public function joinView(){
@@ -105,7 +119,9 @@ class GroupController extends Controller
             ->where('group_id', $id)
             ->where('status', 'accepted')
             ->get();
-            return response()->json($memberList, 200);
+            return 
+            view('pages.member',compact('memberList'));
+            // response()->json($memberList, 200);
             
         // Raw queries debugger lol
         // return DB::table('members')->join('groups','members.group_id','groups.id')->get();
