@@ -13,19 +13,6 @@
                         <li class="list-group-item"><a href="/profile">Profile</a></li>
                         <li class="list-group-item"><a href="/mail">Mail #Acan aya</a></li>
                         <li class="list-group-item"><a href="/group">Group</a></li>
-                        <li class="list-group-item"><a href="/group/create">Create Group</a></li>
-                        <li class="list-group-item"><a href="/group/join">Join Group</a></li>
-                    </ul>
-                    Branch
-                    <ul class="list-group">
-                    @foreach ($id as $ids)
-                    <li class="list-group-item"><a href="/group/{{$ids->id}}/member">Member List</a></li>
-                    <li class="list-group-item"><a href="/group/{{$ids->id}}/settings">Settings</a></li>
-                    <li class="list-group-item"><a href="/group/{{$ids->id}}/adminship">Adminship</a></li>
-                    <li class="list-group-item"><a href="/group/{{$ids->id}}/adminship/add">Add Adminship</a></li>
-                    <li class="list-group-item"><a href="/group/{{$ids->id}}/payment">Member Payment List</a></li>
-                    <li class="list-group-item"><a href="/group/{{$ids->id}}/payment/list">Payment List</a></li>
-                    @endforeach
                     </ul>
                 </div>
             </div>

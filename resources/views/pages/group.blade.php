@@ -2,6 +2,10 @@
 
 @section('content')
 <div class="container">
+    <div class="container">
+        <a href="/group/create"><button class="btn btn-primary">Buat Group</button></a>
+        <a href="/group/join"><button class="btn btn-primary">Join Group</button></a>
+    </div>
     <h4>Owned</h4>
     <div class="container">
         <div class="row row-cols-4">
@@ -37,7 +41,7 @@
                     </ul>
                     <div class="card-body">
                         <a href="/group/{{$joined->id}}/settings" class="card-link">Settings</a>
-                    </div>
+                    </div>  
                 </div>
             @endforeach
         </div>

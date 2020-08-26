@@ -113,15 +113,21 @@ class GroupController extends Controller
     }
 
     public function memberList($id){
-        $memberList = DB::table('members')
+        $data['memberList'] = DB::table('members')
             ->join('users', 'members.user_id', 'users.id')
             ->select('users.name', 'members.isAdmin')
             ->where('group_id', $id)
             ->where('status', 'accepted')
             ->get();
-            return 
-            view('pages.member',compact('memberList'));
-            // response()->json($memberList, 200);
+
+        $data['pending'] = DB::table('members')
+            ->select(['name','members.user_id'])
+            ->join('users','members.user_id','users.id')
+            ->where('status','pending')
+            ->get();
+
+        return view('pages.member', $data);
+        // view('pages.member',$data);
             
         // Raw queries debugger lol
         // return DB::table('members')->join('groups','members.group_id','groups.id')->get();

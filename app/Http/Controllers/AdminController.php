@@ -46,13 +46,13 @@ class AdminController extends Controller
 
     public function userInPending($id){
         // $pending = Member::where('group_id', $id)->get();
-        $data['users'] = DB::table('members')
+        $data['pending'] = DB::table('members')
             ->select(['name','members.user_id'])
             ->join('users','members.user_id','users.id')
             ->where('status','pending')
             ->get();
 
-        return view('pages.changeStatus', $data);
+        return view('pages.member', $data);
     }
 
     public function userChangeStatus(Request $request){
@@ -85,8 +85,10 @@ class AdminController extends Controller
             ->where('isAdmin', true)
             ->where('group_id', $id)
             ->get();
-
-        return response()->json($data,200);
+        $data['group_id'] = $id;
+        return 
+        view('pages.adminList', compact('data'));
+        // response()->json($data,200);
     }
 
     public function addAdminshipView(){

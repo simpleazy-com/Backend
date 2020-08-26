@@ -7,6 +7,7 @@
             <h1 class="display-4">{{ $group -> name }}</h1>
             <p class="lead">{{ $group -> description }}</p>
             <div class="container"> 
+                <a href="/group/{{ $group -> id }}/settings "><button class="btn btn-primary">Settings</button></a>
                 <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                     More
                 </button>
@@ -21,7 +22,17 @@
     </div>
     <div class="container">
         <div class="row row-cols-2">
-            <div class="col-md-9 border">Buat Payment <br> Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis, aperiam animi? Ratione iure, doloremque ea neque dolore dolorum. Sit harum cum eum aut facere fuga aliquid odio! Blanditiis, eveniet aliquid. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quia minima facere corporis dicta debitis aspernatur nesciunt qui, quod ullam praesentium obcaecati minus enim aliquid ab voluptatum tempora mollitia totam odit. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Corporis suscipit mollitia quae perspiciatis exercitationem laborum quis cum, libero expedita? Minus beatae repellendus nihil commodi distinctio nobis ipsa aspernatur totam at?</div>
+            <div class="col-md-9 border">
+
+            <div class="card" style="width: 100%;">
+                <div class="card-body">
+                    <a href="#"><h5 class="card-title">Minggu Pertama</h5></a>
+                    <h6 class="card-subtitle mb-2 text-muted">Paid</h6>
+                    <p class="card-text alert alert-success">Rp. 50,000</p>
+                </div>
+            </div>
+
+        </div>
             <div class="col-5 col-md-3 border">
                 <ul class="list-group">
                     <li class="list-group-item"><a href="/group/{{$group->id}}/member">Member</a></li>
