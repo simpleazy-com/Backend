@@ -20,6 +20,7 @@ class CreateTableSetPayment extends Migration
             $table->integer('nominal');
             $table->timestamps();
         });
+        // add col
     }
 
     /**
