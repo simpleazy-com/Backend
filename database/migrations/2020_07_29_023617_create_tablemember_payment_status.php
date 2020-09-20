@@ -15,7 +15,7 @@ class CreateTablememberPaymentStatus extends Migration
     {
         Schema::create('member_payment_status', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('member_id')->unsigned();
             $table->bigInteger('payment_id')->unsigned();
             $table->enum('status',['belum_bayar','sudah_bayar']);
             $table->integer('total');
