@@ -28,7 +28,11 @@ class CheckGroupMode
         $code = $request->get('code');
 
         $group = Group::where('code', $code)->first();
-        // Bug id is not an object
+        
+        if($group == null){
+            return response()->json(['Invalid room code'], 400);
+        }
+        
         if(Admin::where('user_id', Auth::user()->id)->where('group_id', $group->id)->where('role', 'owner')->orWhere('role','admin')->first()){
            return response()->json(['Redirecting to your room'], 400); 
         }

@@ -25,11 +25,15 @@ class PaymentController extends Controller
         return response()->json($memberList, 200);
     }
 
-    public function addPaymentView(){
-        return view('pages.addPayment');
+    public function addPaymentView($id){
+        $memberList = DB::table('members')
+            ->join('users', 'members.user_id','users.id')
+            ->get();
+        return view('pages.addPayment', compact('memberList'));
     }
 
     public function addPayment(Request $request){
+        
         $validated = Validator::make($request->all(), [
             'nominal' => 'required|numeric'
         ]);
@@ -38,27 +42,38 @@ class PaymentController extends Controller
             return response()->json($validated->errors(), 400);
         }
 
-        $exist = SetPayment::select('index_row')->where('group_id', $request->route('id'))->latest()->first();
+        $setPayment = SetPayment::select('index_row')->where('group_id', $request->route('id'))->latest()->first();
 
-        if(!empty($exist)){     
+        if(!empty($setPayment)){     
             
             $payment = new SetPayment();
             $payment->group_id = $request->route('id');
-            $payment->index_row = $exist->index_row + 1;
+            $payment->index_row = $setPayment->index_row + 1;
             $payment->nominal = $request->get('nominal');
             $payment->save();
 
             // select all member in this group
-            $setPayment = Member::where('group_id', $request->route('id'))->get();
 
-            foreach($setPayment as $sp){
+            foreach($request->selected_member as $sm){
                 $paymentStatus = new MemberPaymentStatus();
-                $paymentStatus->user_id = $sp->user_id;
+                $paymentStatus->user_id = $sm;
                 $paymentStatus->payment_id = $payment->id;
                 $paymentStatus->status = 'belum_bayar';
                 $paymentStatus->total = 0;
                 $paymentStatus->save();
-            }
+            }   
+
+            // Old future
+            // $setPayment = Member::where('group_id', $request->route('id'))->get();
+
+            // foreach($setPayment as $sp){
+            //     $paymentStatus = new MemberPaymentStatus();
+            //     $paymentStatus->user_id = $sp->user_id;
+            //     $paymentStatus->payment_id = $payment->id;
+            //     $paymentStatus->status = 'belum_bayar';
+            //     $paymentStatus->total = 0;
+            //     $paymentStatus->save();
+            // }
             
             return response()->json($payment, 201);
         }
@@ -95,7 +110,7 @@ class PaymentController extends Controller
     }
 
     public function userDetailPayment($id, $user_id, $index_row){
-        // $detail = DB::table('')
+        // $detailPaymentByIndexRows = DB::table('');
     }    
 
     public function paymentList($id){

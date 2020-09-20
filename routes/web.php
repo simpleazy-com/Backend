@@ -42,7 +42,7 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/group/{id}/settings', 'AdminController@settingsView');
         Route::post('/group/{id}/settings', 'AdminController@settings');
 
-        // User request to join group with mode 'invite_only'
+        // User request to join group with 'invite_only' mode 
         Route::get('/group/{id}/pending', 'AdminController@userInPending');
         Route::post('/group/{id}/pending', 'AdminController@userChangeStatus');
         
@@ -53,10 +53,10 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/group/{id}/payment/{user_id}', 'PaymentController@userDetailPayment');
 
         Route::get('/group/{id}/payment/{user_id}', 'PaymentController@checkUserPaymentStatus')->where('user_id', '[0-9999999]+');
-        Route::get('/group/{id}/payment/{user_id}/{index_row}', 'PaymentController@userDetailPayment'); //can beres
+        Route::get('/group/{id}/payment/{user_id}/{index_row}', 'PaymentController@userDetailPayment');
         Route::get('/group/{id}/payment/list', 'PaymentController@paymentList');
         
-        // Graph
+        // Statistic
         Route::get('/group/{id}/payment/status', 'PaymentController@graph');
 
         Route::middleware(['isOwner'])->group(function(){
@@ -68,5 +68,4 @@ Route::middleware(['auth'])->group(function(){
         });
 
     });
-});  //HOHOHIHE
-//HOHOHIHE PALAKAU
+});
