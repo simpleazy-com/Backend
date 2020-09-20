@@ -22,6 +22,11 @@ Auth::routes();
 Route::redirect('home','dashboard'); //Kudu teang auth route
 
 Route::middleware(['auth'])->group(function(){
+
+    Route::get('/logout', function(){
+        Auth::logout();
+    });
+
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
     Route::get('/profile', 'ProfileController@profile');
 
@@ -30,7 +35,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/group', 'GroupController@groupList');
     Route::get('/group/create', 'GroupController@createView');
     Route::post('/group/create', 'GroupController@create');
-    Route::get('/group/{id}', 'GroupController@groupDetail')->where('id', '[0-9999999]+'); //Kemungkinan aya bug konyol
+    Route::get('/group/{id}', 'GroupController@groupDetail')->where('id', '[0-9999999]+'); 
     Route::get('/group/{id}/member', 'GroupController@memberList');
 
     Route::get('/group/join', 'GroupController@joinView');
@@ -60,10 +65,9 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/group/{id}/payment/status', 'PaymentController@graph');
 
         Route::middleware(['isOwner'])->group(function(){
-             // Role management
-            Route::get('/group/{id}/adminship', 'AdminController@adminship'); //List admin
+            Route::get('/group/{id}/adminship', 'AdminController@adminship');
             
-            Route::get('/group/{id}/adminship/add', 'AdminController@addAdminshipView'); //Show list member
+            Route::get('/group/{id}/adminship/add', 'AdminController@addAdminshipView');
             Route::post('/group/{id}/adminship/add', 'AdminController@addAdminship')->middleware('checkAdmin');
         });
 

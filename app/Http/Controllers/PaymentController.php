@@ -28,6 +28,7 @@ class PaymentController extends Controller
     public function addPaymentView($id){
         $memberList = DB::table('members')
             ->join('users', 'members.user_id','users.id')
+            ->where('group_id',$id)
             ->get();
         return view('pages.addPayment', compact('memberList'));
     }
@@ -63,7 +64,7 @@ class PaymentController extends Controller
                 $paymentStatus->save();
             }   
 
-            // Old future
+            // Oldman will never used again
             // $setPayment = Member::where('group_id', $request->route('id'))->get();
 
             // foreach($setPayment as $sp){
