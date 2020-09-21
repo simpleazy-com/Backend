@@ -91,11 +91,12 @@ class AdminController extends Controller
         // response()->json($data,200);
     }
 
-    public function addAdminshipView(){
+    public function addAdminshipView($group_id){
         // fetch member room
         $data['users'] = DB::table('members')
             ->select(['name','members.user_id'])
             ->join('users','members.user_id','users.id')
+            ->where('group_id', $group_id)
             ->where('status','accepted')
             ->where('isAdmin', false)
             ->get();

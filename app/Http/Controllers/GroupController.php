@@ -94,18 +94,26 @@ class GroupController extends Controller
         if(Member::where('user_id', Auth::user()->id)
             ->where('group_id', $group->id)
             ->whereIn('status', ['pending','accepted'])
-            ->first()    
+            ->first()
         ){
             return response()->json(['Already Join'], 400);
         }
 
-        try{
+        if(Group::where('mode', 'opened')->where('id', $group->id)->first()){
             $member = new Member();
+            $member->status = 'accepted';
             $member->user_id = Auth::user()->id;
             $member->group_id = $group->id;
             $member->save();
-        }catch(Exception $e){
-            return response()->json($e->errors(), 400);
+        }else{
+            try{
+                $member = new Member();
+                $member->user_id = Auth::user()->id;
+                $member->group_id = $group->id;
+                $member->save();
+            }catch(Exception $e){
+                return response()->json($e->errors(), 400);
+            }
         }
 
         return response()->json(compact('group','member'), 201);
