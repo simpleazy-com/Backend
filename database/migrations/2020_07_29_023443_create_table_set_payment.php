@@ -18,6 +18,7 @@ class CreateTableSetPayment extends Migration
             $table->bigInteger('group_id')->unsigned();
             $table->integer('index_row');
             $table->integer('nominal');
+            $table->date('deadline');
             $table->timestamps();
         });
         // add col

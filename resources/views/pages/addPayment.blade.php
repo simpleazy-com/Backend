@@ -9,6 +9,8 @@
         @foreach ($memberList as $ml)
             <input type="checkbox" name="selected_member[]" value="{{ $ml->id }}"> {{ $ml->name }}
         @endforeach
+
+        <input type="date" name="deadline">
         
         <button type="submit">Buat</button>
     </form>

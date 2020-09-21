@@ -36,7 +36,9 @@ class PaymentController extends Controller
     public function addPayment(Request $request){
         
         $validated = Validator::make($request->all(), [
-            'nominal' => 'required|numeric'
+            'nominal' => 'required|numeric',
+            'selected_member[]' => 'boolean',
+            'deadline' => 'required|date'
         ]);
 
         if($validated->fails()){
@@ -51,6 +53,7 @@ class PaymentController extends Controller
             $payment->group_id = $request->route('id');
             $payment->index_row = $setPayment->index_row + 1;
             $payment->nominal = $request->get('nominal');
+            $payment->deadline = $request->get('deadline');
             $payment->save();
 
             // select all member in this group
@@ -63,18 +66,6 @@ class PaymentController extends Controller
                 $paymentStatus->total = 0;
                 $paymentStatus->save();
             }   
-
-            // Oldman will never used again
-            // $setPayment = Member::where('group_id', $request->route('id'))->get();
-
-            // foreach($setPayment as $sp){
-            //     $paymentStatus = new MemberPaymentStatus();
-            //     $paymentStatus->user_id = $sp->user_id;
-            //     $paymentStatus->payment_id = $payment->id;
-            //     $paymentStatus->status = 'belum_bayar';
-            //     $paymentStatus->total = 0;
-            //     $paymentStatus->save();
-            // }
             
             return response()->json($payment, 201);
         }
@@ -83,13 +74,14 @@ class PaymentController extends Controller
         $payment->group_id = $request->route('id');
         $payment->index_row = 1;
         $payment->nominal = $request->get('nominal');
+        $payment->deadline = $request->get('deadline');
         $payment->save();
 
         $setPayment = Member::where('group_id', $request->route('id'))->get();
 
         foreach($setPayment as $sp){
             $paymentStatus = new MemberPaymentStatus();
-            $paymentStatus->user_id = $sp->user_id;
+            $paymentStatus->member_id = $sp->user_id;
             $paymentStatus->payment_id = $payment->id;
             $paymentStatus->status = 'belum_bayar';
             $paymentStatus->total = 0;
