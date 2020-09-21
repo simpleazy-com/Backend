@@ -66,9 +66,9 @@ Route::middleware(['auth'])->group(function(){
 
         Route::middleware(['isOwner'])->group(function(){
             Route::get('/group/{id}/adminship', 'AdminController@adminship');
-            
             Route::get('/group/{id}/adminship/add', 'AdminController@addAdminshipView');
             Route::post('/group/{id}/adminship/add', 'AdminController@addAdminship')->middleware('checkAdmin');
+            Route::get('/group/{id}/adminship/{user_id}/demote', 'AdminController@demoteAdminshipStatus');
         });
 
     });

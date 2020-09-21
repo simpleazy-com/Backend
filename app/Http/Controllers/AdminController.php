@@ -129,4 +129,18 @@ class AdminController extends Controller
 
     }
 
+    public function demoteAdminshipStatus($group_id,$user_id){
+
+        $demoteAdmin = Admin::where('user_id', $user_id)
+            ->where('group_id', $group_id)
+            ->delete();
+        $changeMemberStatus = Member::where('user_id', $user_id)
+            ->where('group_id', $group_id)
+            ->first();
+        $changeMemberStatus->isAdmin = false;
+        $changeMemberStatus->save();
+
+        return response()->json($changeMemberStatus, 201);
+    }
+
 }

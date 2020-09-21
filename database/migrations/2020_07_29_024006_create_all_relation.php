@@ -27,7 +27,7 @@ class CreateAllRelation extends Migration
         });
 
         Schema::table('member_payment_status', function(Blueprint $table){
-            $table->foreign('member_id')->references('id')->on('members');
+            $table->foreign('member_id')->references('user_id')->on('members');
             $table->foreign('payment_id')->references('id')->on('set_payment');
         });
 

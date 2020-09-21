@@ -57,7 +57,7 @@ class PaymentController extends Controller
 
             foreach($request->selected_member as $sm){
                 $paymentStatus = new MemberPaymentStatus();
-                $paymentStatus->user_id = $sm;
+                $paymentStatus->member_id = $sm;
                 $paymentStatus->payment_id = $payment->id;
                 $paymentStatus->status = 'belum_bayar';
                 $paymentStatus->total = 0;

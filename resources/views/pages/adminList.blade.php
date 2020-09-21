@@ -20,7 +20,7 @@
             <tr>
                 <th scope="row">{{ $i }} </th>
                 <td>{{ $user->name }} </td>
-                <td><a href=""><button class="btn btn-danger" style="float:right;">Demote</button></a></td>
+                <td><a href="/group/{{ $data['group_id'] }}/adminship/{{ $user->user_id }}/demote"><button class="btn btn-danger" style="float:right;">Demote</button></a></td>
             </tr>
             <?php $i++ ?>
         @endforeach
