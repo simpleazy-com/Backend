@@ -5,9 +5,9 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Confirm Password') }}</div>
+                <div class="card-header" style="background: indigo;color:white">{{ __('Confirm Password') }}</div>
 
-                <div class="card-body">
+                <div class="card-body"style="background: purple;color:white" >
                     {{ __('Please confirm your password before continuing.') }}
 
                     <form method="POST" action="{{ route('password.confirm') }}">
@@ -29,7 +29,7 @@
 
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" style="background: indigo;color:white" class="btn btn-primary">
                                     {{ __('Confirm Password') }}
                                 </button>
 
