@@ -1,8 +1,22 @@
 // Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@500&display=swap');
 
 // Variables
 @import 'variables';
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+*{
+  color: white;
+  font-family: $font;
+}
+body{
+  background-color: $body-bg;
+}
+.card-header{
+  background-color: $indigo;
+}
+.card-body{
+  background-color: $purple;
+}
