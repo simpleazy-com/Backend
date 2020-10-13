@@ -15,14 +15,42 @@
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
     <!-- Resources -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    
+    <link rel="stylesheet" href="../sass/app.scss">
+    <style>
+    // Fonts
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@500&display=swap');
 
+// // Variables
+// @import 'variables';
+
+// // Bootstrap
+// @import '~bootstrap/scss/bootstrap';
+
+*{
+  color: white;
+  font-family: 'Fira Code', monospace;
+}
+body{
+  background-color: #1B1B32;
+}
+.card-header{
+  background-color: indigo;
+}
+.card-body{
+  background-color: #C2C6C6;
+}
+button{
+  background-color: purple;
+  color: white;
+}</style>
 </head>
 <body>
     <div id="app">
