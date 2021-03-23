@@ -7,6 +7,9 @@ use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 
+use App\Events\InvoiceHasCreatedEvent;
+use App\Listeners\InvoiceStartScheduleListener;
+
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -14,9 +17,13 @@ class EventServiceProvider extends ServiceProvider
      *
      * @var array
      */
+    
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+        ],
+        InvoiceHasCreatedEvent::class => [
+            InvoiceStartScheduleListener::class,
         ],
     ];
 
@@ -30,5 +37,10 @@ class EventServiceProvider extends ServiceProvider
         parent::boot();
 
         //
+    }
+
+    public function shouldDiscoverEvents()
+    {
+        return true;
     }
 }

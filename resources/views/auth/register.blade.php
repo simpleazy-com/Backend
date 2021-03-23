@@ -2,19 +2,35 @@
 
 @section('content')
 <style>
-    * {
-        font-family: consolas;
-        font-family: bold;
-    }
-    body{
-        background-color:#1B1B32;
-    }
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@500&display=swap');
+
+*{
+  color: white;
+  font-family: 'Fira Code', monospace;
+}
+body{
+  background-color: #1B1B32;
+}
+.card{
+    background-color:indigo;
+    color: white;
+}
+.card-header{
+  background-color: indigo;
+}
+.card-body{
+  background-color: purple;
+}
+button{
+  background-color: #6574cd;
+  color: white;
+}
 </style>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card"style="background: #938ED9;border: 5px solid #FD5C70">
-                <div class="card-header" style="background-color:#FD5C70;font-weight:bolder;font-size:20pt;color:white;margin:0px//'"><img src="https://res.cloudinary.com/codelifings/image/upload/v1596531968/ice-cream_tv7wto.png" class="img" style="width:50px;height:50px" alt="..."> Sign Up
+            <div class="card">
+                <div class="card-header" ><img src="https://res.cloudinary.com/codelifings/image/upload/v1596531968/ice-cream_tv7wto.png" class="img" style="width:50px;height:50px" alt="..."> Sign Up
                 </div>
 
                 <div class="card-body" style="color:white">

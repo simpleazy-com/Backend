@@ -1,8 +1,31 @@
-// Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@500&display=swap');
 
-// Variables
-@import 'variables';
-
-// Bootstrap
-@import '~bootstrap/scss/bootstrap';
+*{
+  color: white;
+  font-family: 'Fira Code', monospace;
+}
+body{
+  background-color: #1B1B32;
+}
+.card{
+    background-color:#5E22D0;
+    color: white;
+}
+.card-header{
+  background-color: #5E22D0;
+}
+.card-body{
+  background-color: #9561e2;
+}
+.nav-link{
+    color: #fff;
+    position: relative;
+}
+.nav-link:hover, .nav-link:active{
+    color: #5E22D0;
+    position: relative;
+}
+button{
+  background-color: #6574cd;
+  color: white;
+}
