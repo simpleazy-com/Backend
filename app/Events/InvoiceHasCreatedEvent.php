@@ -14,14 +14,11 @@ class InvoiceHasCreatedEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /**
-     * Create a new event instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public $payment;
+
+    public function __construct($payment)
     {
-        //
+        $this->payment = $payment;
     }
 
 }

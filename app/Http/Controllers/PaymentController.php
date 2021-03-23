@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+use App\Events\InvoiceHasCreatedEvent;
+
 use Auth;
 use App\Group;
 use App\Member;
@@ -56,6 +58,9 @@ class PaymentController extends Controller
             $payment->deadline = $request->get('deadline');
             $payment->save();
 
+            // Invoice or Payment event occurs
+            event(new InvoiceHasCreatedEvent($payment));
+
             // select all member in this group
 
             foreach($request->selected_member as $sm){
@@ -65,8 +70,8 @@ class PaymentController extends Controller
                 $paymentStatus->status = 'belum_bayar';
                 $paymentStatus->total = 0;
                 $paymentStatus->save();
-            }   
-            
+            }
+
             return response()->json($payment, 201);
         }
 
