@@ -45,28 +45,28 @@ class CreateAllRelation extends Migration
      */
     public function down()
     {
-        Schema::table('admins', function(Blueprint $table){
-            $table->dropForeign(['user_id']);
-            $table->dropForeign(['group_id']);
-        });
+        // Schema::table('admins', function(Blueprint $table){
+        //     $table->dropForeign(['user_id']);
+        //     $table->dropForeign(['group_id']);
+        // });
 
-        Schema::table('members', function(Blueprint $table){
-            $table->dropForeign(['user_id']);
-        });
+        // Schema::table('members', function(Blueprint $table){
+        //     $table->dropForeign(['user_id']);
+        // });
 
-        Schema::table('set_payment', function(Blueprint $table){
-            $table->dropForeign(['group_id']);
-        });
+        // Schema::table('set_payment', function(Blueprint $table){
+        //     $table->dropForeign(['group_id']);
+        // });
 
-        Schema::table('member_payment_status', function(Blueprint $table){
-            $table->dropForeign(['user_id']);
-            $table->dropForeign(['payment_id']);
-        });
+        // // Schema::table('member_payment_status', function(Blueprint $table){
+        // //     $table->dropForeign(['user_id']);
+        // //     $table->dropForeign(['payment_id']);
+        // // });
 
-        Schema::table('log', function(Blueprint $table){
-            $table->dropForeign(['user_id']);
-            $table->dropForeign(['group_id']);
-        });
+        // Schema::table('log', function(Blueprint $table){
+        //     $table->dropForeign(['user_id']);
+        //     $table->dropForeign(['group_id']);
+        // });
 
     }
 }

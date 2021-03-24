@@ -25,6 +25,8 @@ class AddColumnStatusAtMember extends Migration
      */
     public function down()
     {
-        Schema::dropColumn('status');
+        Schema::table('members', function (Blueprint $table) {
+            $table->dropColumn('status');
+        });
     }
 }

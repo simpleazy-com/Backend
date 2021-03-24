@@ -19,10 +19,13 @@ class GroupController extends Controller
         ->join('groups','admins.group_id','groups.id')
         ->where('role', 'owner')
         ->get();
-        $data['joined'] = Member::where('user_id', Auth::id())->get();
+        $data['joined'] = Member::where('user_id', Auth::id())
+        ->join('groups','members.group_id','groups.id')
+        ->get();
         return 
         view('pages.group', compact('data'));
         // response()->json(compact('data'), 200);
+        // json_decode($data['joined']);
     }
 
     public function createView(){
@@ -63,10 +66,23 @@ class GroupController extends Controller
         ->join('groups','admins.group_id','groups.id')
         ->where('admins.user_id',Auth::user()->id)
         ->get();
-        if(!sizeof($verif) == 0){
-            $group = Group::find($verif[0]->id);
-        }else{
-            $group = "Access Probidden";
+
+        $verifMember = Member::where('group_id', $id)
+        ->join('groups','members.group_id','groups.id')
+        ->where('members.user_id',Auth::user()->id)
+        ->get();
+
+        try{
+            if(!sizeof($verif) == 0){
+                $group = Group::find($verif[0]->id);
+            }
+            else if(!sizeof($verifMember) == 0){
+                $group = Group::find($verifMember[0]->id);
+            }else{
+                $group = "Access Probidden";
+            }
+        }catch(ErrorException $e){
+            echo $e;
         }
         return 
         view('pages.detailGroup',compact('group'));
