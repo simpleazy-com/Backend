@@ -25,6 +25,8 @@ class AddColumnModeAtGroup extends Migration
      */
     public function down()
     {
-        Schema::dropColumn('mode');
+        Schema::table('groups', function (Blueprint $table) {
+            $table->dropColumn('mode');
+        });
     }
 }
