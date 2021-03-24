@@ -33,7 +33,7 @@ class InvoiceStartScheduleListener
     {
         $group_id = $event->payment->group_id;
         $index_row = $event->payment->index_row;
-        
+
         $members_email = DB::table('users')
                         ->join('members', 'users.id', 'members.user_id')
                         ->join('set_payment', 'members.group_id', 'set_payment.group_id')
@@ -43,13 +43,15 @@ class InvoiceStartScheduleListener
                         ->where('members.status', 'accepted')
                         ->get();
         
+        $deadline = $event->payment->deadline;
+
+        $group_name = DB::table('groups')->select('name')->where('id', $group_id)->get();
 
         foreach($members_email as $me){
             Log::info($me->email);
-            Mail::to($me->email)->send(new DeadlineMail());
+            Mail::to($me->email)->send(new DeadlineMail($deadline, $group_name));
         }
 
-        Log::info('Gpp abaikan aja cuma debug');
 
     }
     

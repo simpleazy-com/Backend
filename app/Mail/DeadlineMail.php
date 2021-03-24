@@ -11,14 +11,13 @@ class DeadlineMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public $deadline;
+    public $group_name;
+
+    public function __construct($deadline, $group_name)
     {
-        //
+        $this->deadline = $deadline;
+        $this->$group_name = $group_name;
     }
 
     /**
@@ -28,6 +27,9 @@ class DeadlineMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.deadline-mail');
+        return $this->markdown('emails.deadline-mail', [
+            'deadline' => $this->deadline,
+            'group_name' => $this->group_name,
+        ]);
     }
 }
