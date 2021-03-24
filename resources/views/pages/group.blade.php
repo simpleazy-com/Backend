@@ -1,50 +1,46 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="container">
-        <a href="/group/create"><button class="btn btn-primary">Buat Group</button></a>
-        <a href="/group/join"><button class="btn btn-primary">Join Group</button></a>
+<div class="konten">
+    <div class="group-button">
+        <div class="p-3"><a href="/group/create"><span class="fa fa-plus-square"></span> Tambah Group</a></div>
+        <div class="p-3"><a href="/group/join"><span class="fa fa-sign-in-alt"></span> Gabung Group</a></div>
     </div>
-    <h4>Owned</h4>
-    <div class="container">
-        <div class="row row-cols-4">
-            @foreach ($data['owned'] as $owned)
-                <div class="card col" style="width: 18rem;">
-                    <img src="..." class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title"><a href="/group/{{$owned->id}}">{{ $owned -> name}}</a></h5>
-                        <p class="card-text"> {{ $owned -> description }} </p>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <!-- <li class="list-group-item"><a href="/group/{{$owned->id}}">Detail Group</a></li> -->
-                    </ul>
-                    <div class="card-body">
-                        <a href="/group/{{$owned->id}}/settings" class="card-link">Settings</a>
-                    </div>
+    <h4 class="pl-3">Group Owned</h4>
+    <div class="d-flex flex-wrap group-content">
+        @foreach ($data['owned'] as $owned)
+            <div class="p-2">
+                <h5 class="card-title">
+                    <a href="/group/{{ $owned -> id }}/settings"><span class="fa fa-cog h5 float-right"></span></a>
+                    <a href="/group/{{ $owned -> id }}">{{ $owned -> name }}</a>
+                </h5>
+                <p class="card-text">{{ $owned -> description }}</p>
+                <p class="card-text h6">-Pembuat Group-</p>
+                <hr>
+                <div class="group-payment-reminder">
+                    <!-- Daftar Tagihan yang akan datang -->
                 </div>
-            @endforeach
-        </div>
+            </div>
+        @endforeach
     </div>
-    <h4>Joined</h4>
-    <div class="container">
-        <div class="row row-cols-4">
-            @foreach ($data['joined'] as $joined)
-                <div class="card col" style="width: 18rem;">
-                    <img src="..." class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title"><a href="/group/{{$joined->id}}">{{ $joined -> name}}</a></h5>
-                        <p class="card-text"> {{ $joined -> description }} </p>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <!-- <li class="list-group-item"><a href="/group/{{$joined->id}}">Detail Group</a></li> -->
-                    </ul>
-                    <div class="card-body">
-                        <a href="/group/{{$joined->id}}/settings" class="card-link">Settings</a>
-                    </div>  
+    <h4 class="pl-3">Group Joined</h4>
+    <div class="d-flex flex-wrap group-content">
+        @foreach ($data['joined'] as $joined)
+            <div class="p-2">
+                <h5 class="card-title">
+                    <a href="/group/{{ $joined -> id }}/settings"><span class="fa fa-cog h5 float-right"></span></a>
+                    <a href="/group/{{ $joined -> id }}">{{ $joined -> name }}</a>
+                </h5>
+                <p class="card-text">{{ $joined -> description }}</p>
+                <p class="card-text h6">-Pembuat Group-</p>
+                <hr>
+                <div class="group-payment-reminder">
+                    <!-- Daftar Tagihan yang akan datang -->
                 </div>
-            @endforeach
-        </div>
+            </div>
+        @endforeach
     </div>
 </div>
 @endsection
+
+

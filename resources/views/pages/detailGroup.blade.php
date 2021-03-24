@@ -1,45 +1,30 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="jumbotron jumbotron-fluid">
+<?php $group = $data['group']; ?>
+<div class="konten group-detail-konten">
+    <div class="jumbotron group-detail-jumbotron">
         <div class="container">
-            <h1 class="display-4">{{ $group -> name }}</h1>
+            <a class="putih" href="/group/{{ $group -> id }}/settings"><span class="fa fa-cog h5 float-right"></span></a>
+            <h1>{{ $group -> name }}</h1>
             <p class="lead">{{ $group -> description }}</p>
-            <div class="container"> 
-                <a href="/group/{{ $group -> id }}/settings "><button class="btn btn-primary">Settings</button></a>
-                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                    More
-                </button>
-                <div class="collapse" id="collapseExample">
-                    <div class="card card-body">
-                        <p class="lead">Mode : {{ $group -> mode }}</p>
-                        <p class="lead">Code : {{ $group -> code }}</p>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
-    <div class="container">
-        <div class="row row-cols-2">
-            <div class="col-md-9 border">
-
-            <div class="card" style="width: 100%;">
-                <div class="card-body">
-                    <a href="#"><h5 class="card-title">Minggu Pertama</h5></a>
-                    <h6 class="card-subtitle mb-2 text-muted">Paid</h6>
-                    <p class="card-text alert alert-success">Rp. 50,000</p>
-                </div>
+    <div class="group-detail-flex">
+        <div class="group-detail-list-payment">
+            @foreach($data['payment'] as $payment)
+            <div class="group-detail-payment">
+                <h1><a href="/group/{{ $group -> id }}/payment/{{ $payment -> id }}">Rp. {{ $payment -> nominal }}</a></h1>
+                <p>Batas Waktu : {{ $payment -> deadline }}</p>
             </div>
-
+            @endforeach
         </div>
-            <div class="col-5 col-md-3 border">
-                <ul class="list-group">
-                    <li class="list-group-item"><a href="/group/{{$group->id}}/member">Member</a></li>
-                    <li class="list-group-item"><a href="/group/{{$group->id}}/adminship">Adminship</a></li>
-                    <li class="list-group-item"><a href="/group/{{$group->id}}/payment">Payment</a></li>
-                </ul>
-            </div>
+        <div class="group-detail-list-button">
+            <a href="/group/{{ $group->id }}/member">Member</a>
+            <a href="/group/{{ $group->id }}/info">Group Info</a>
+            <a href="/group/{{ $group->id }}/payment">List Payment</a> <!--untuk lihat semua tagihan (belum bayar, tidak membayar, sudah dibayar)-->
+            <a href="/group/{{ $group->id }}/adminship">Adminship (khusus owner)</a>
+            <a href="/group/{{ $group->id }}/paymentadmin">Payment (khusus admin)</a>
         </div>
     </div>
 </div>
