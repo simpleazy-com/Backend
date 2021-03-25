@@ -73,7 +73,7 @@ class AdminController extends Controller
             Member::where('user_id', $request->get('user_id'))->delete();
         }
 
-        return redirect('/group/'.$request->route('id').'/pending');
+        return redirect('/group/'.$request->route('id').'/member');
 
     }
 

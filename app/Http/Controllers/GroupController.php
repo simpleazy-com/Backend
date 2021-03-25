@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Group;
 use App\Admin;
 use App\Member;
+use App\SetPayment;
 use Auth;
 
 class GroupController extends Controller
@@ -62,6 +63,8 @@ class GroupController extends Controller
     }
 
     public function groupDetail($id){
+
+        $isAdmin;
         $verif = Admin::where('group_id', $id)
         ->join('groups','admins.group_id','groups.id')
         ->where('admins.user_id',Auth::user()->id)
@@ -74,18 +77,26 @@ class GroupController extends Controller
 
         try{
             if(!sizeof($verif) == 0){
-                $group = Group::find($verif[0]->id);
+                $data['group'] = Group::find($verif[0]->id);
+                $isAdmin = true;
             }
             else if(!sizeof($verifMember) == 0){
-                $group = Group::find($verifMember[0]->id);
+                $data['group'] = Group::find($verifMember[0]->id);
+                $isAdmin = false;
             }else{
-                $group = "Access Probidden";
+                $data['group'] = "Access Probidden";
+                $isAdmin = false;
             }
         }catch(ErrorException $e){
             echo $e;
         }
+
+        $data['payment'] = SetPayment::where('group_id', $id)
+        ->orderBy('deadline')
+        ->get();
+
         return 
-        view('pages.detailGroup',compact('group'));
+        view('pages.detailGroup',compact('data'));
         // response()->json($group, 200);
     }
 
