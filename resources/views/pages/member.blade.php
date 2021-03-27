@@ -12,15 +12,7 @@
                 </tr>
             </thead>
             <tbody>
-            <?php $i = 1 ?>
-            @foreach($memberList as $member)
-                <tr>
-                    <th scope="row">{{ $i }} </th>
-                    <td>{{ $member->name }} </td>
-                    <td>{{ $member->isAdmin == 1?"Admin":"Member" }} </td>
-                </tr>
-                <?php $i++ ?>
-            @endforeach
+           
             </tbody>
         </table>
         <h5>Pending</h5>
@@ -41,6 +33,7 @@
                         <th scope="row">{{ $i }} </th>
                         <td>{{ $member->name }} </td>
                         <input type="hidden" name="user_id" value="{{ $member->user_id }}">
+                        <input type="hidden" name="group_id" value="{{ $member->group_id }}">
                         <td><button type="submit" value="accepted" name="status">Accept</button></td>
                         <button type="submit" value="rejected" name="status">Reject</button>
                     </tr>

@@ -24,8 +24,6 @@ class GroupController extends Controller
         ->get();
         return 
         view('pages.group', compact('data'));
-        // response()->json(compact('data'), 200);
-        // json_decode($data['joined']);
     }
 
     public function createView(){
@@ -96,40 +94,16 @@ class GroupController extends Controller
     public function join(Request $request){
 
         $code = $request->get('code');
-
         $group = Group::where('code', $code)->first();
 
-        if(Member::where('user_id', Auth::user()->id)->first()){
-            return response()->json(['Already Join'], 400);
-        }
-
-        if(Admin::where('user_id', Auth::user()->id)->first()){
-            return response()->json(['Cannot join to your owned room'], 400);
-        }  
-
-        if(Member::where('user_id', Auth::user()->id)
-            ->where('group_id', $group->id)
-            ->whereIn('status', ['pending','accepted'])
-            ->first()
-        ){
-            return response()->json(['Already Join'], 400);
-        }
-
-        if(Group::where('mode', 'opened')->where('id', $group->id)->first()){
+        try{
             $member = new Member();
             $member->status = 'accepted';
             $member->user_id = Auth::user()->id;
             $member->group_id = $group->id;
             $member->save();
-        }else{
-            try{
-                $member = new Member();
-                $member->user_id = Auth::user()->id;
-                $member->group_id = $group->id;
-                $member->save();
-            }catch(Exception $e){
-                return response()->json($e->errors(), 400);
-            }
+        }catch(Exception $e){
+            return response()->json($e->errors(), 400);
         }
 
         return response()->json(compact('group','member'), 201);
@@ -151,9 +125,6 @@ class GroupController extends Controller
             ->get();
 
         return view('pages.member', $data);
-        // view('pages.member',$data);
-            
-        // Raw queries debugger lol
-        // return DB::table('members')->join('groups','members.group_id','groups.id')->get();
     }
+
 }
