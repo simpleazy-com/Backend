@@ -11,11 +11,11 @@
         @foreach ($data['owned'] as $owned)
             <div class="p-2">
                 <h5 class="card-title">
-                    <a href="/group/{{ $owned -> id }}/settings"><span class="fa fa-cog h5 float-right"></span></a>
-                    <a href="/group/{{ $owned -> id }}">{{ $owned -> name }}</a>
+                    <a href="/group/{{ $owned -> group_id }}/settings"><span class="fa fa-cog h5 float-right"></span></a>
+                    <a href="/group/{{ $owned -> group_id }}">{{ $owned -> name }}</a>
                 </h5>
                 <p class="card-text">{{ $owned -> description }}</p>
-                <p class="card-text h6">-Pembuat Group-</p>
+                <p class="card-text h6">{{ $owned -> user_name }}</p>
                 <hr>
                 <div class="group-payment-reminder">
                     <!-- Daftar Tagihan yang akan datang -->
@@ -32,7 +32,7 @@
                     <a href="/group/{{ $joined -> id }}">{{ $joined -> name }}</a>
                 </h5>
                 <p class="card-text">{{ $joined -> description }}</p>
-                <p class="card-text h6">-Pembuat Group-</p>
+                <p class="card-text h6">{{ $joined -> owner_name }}</p>
                 <hr>
                 <div class="group-payment-reminder">
                     <!-- Daftar Tagihan yang akan datang -->

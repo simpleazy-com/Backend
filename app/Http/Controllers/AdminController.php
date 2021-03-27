@@ -126,11 +126,14 @@ class AdminController extends Controller
         $changeMemberStatus->isAdmin = true;
         $changeMemberStatus->save();
 
-        return response()->json($admin, 201);
+        return 
+        redirect('/group/'.$admin->group_id.'/adminship');
+        // response()->json($admin, 201);
 
     }
 
-    public function demoteAdminshipStatus($group_id,$user_id){
+    public function demoteAdminshipStatus($group_id, Request $request){
+        $user_id = $request->get('user_id');
 
         $demoteAdmin = Admin::where('user_id', $user_id)
             ->where('group_id', $group_id)
@@ -141,7 +144,9 @@ class AdminController extends Controller
         $changeMemberStatus->isAdmin = false;
         $changeMemberStatus->save();
 
-        return response()->json($changeMemberStatus, 201);
+        return 
+        redirect('/group/'.$group_id.'/adminship');
+        // response()->json($changeMemberStatus, 201);
     }
 
 }

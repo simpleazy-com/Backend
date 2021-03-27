@@ -16,13 +16,28 @@ use Auth;
 class GroupController extends Controller
 {
     public function groupList(){
+
         $data['owned'] = Admin::where('user_id', Auth::id())
+        ->join('users', 'admins.user_id', 'users.id')
         ->join('groups','admins.group_id','groups.id')
-        ->where('role', 'owner')
+        ->selectRaw('users.name as user_name, groups.id as group_id, groups.*, admins.*')
         ->get();
-        $data['joined'] = Member::where('user_id', Auth::id())
-        ->join('groups','members.group_id','groups.id')
+
+        // $data['joined'] = Member::where('members.user_id', Auth::id())
+        // ->join('users', 'members.user_id','users.id')
+        // ->join('admins', 'users.id', 'admins.user_id')
+        // ->where('admins.role', 'owner')
+        // ->join('groups','members.group_id','groups.id')
+        // ->get();
+
+        $data['joined'] = Admin::join('users','admins.user_id','users.id')
+        ->join('groups', 'admins.group_id', 'groups.id')
+        ->join('members','groups.id','members.group_id')
+        ->where('members.user_id', Auth::id())
+        ->selectRaw('*, users.name as owner_name')
+        ->where('admins.role','owner')
         ->get();
+
         return 
         view('pages.group', compact('data'));
         // response()->json(compact('data'), 200);
@@ -92,7 +107,7 @@ class GroupController extends Controller
         }
 
         $data['payment'] = SetPayment::where('group_id', $id)
-        ->orderBy('deadline')
+        ->orderBy('id', 'desc')
         ->get();
 
         return 
@@ -153,6 +168,7 @@ class GroupController extends Controller
             ->select('users.name', 'members.isAdmin')
             ->where('group_id', $id)
             ->where('status', 'accepted')
+            ->orderBy('isAdmin','desc')
             ->get();
 
         $data['pending'] = DB::table('members')
@@ -166,5 +182,43 @@ class GroupController extends Controller
             
         // Raw queries debugger lol
         // return DB::table('members')->join('groups','members.group_id','groups.id')->get();
+    }
+
+    public function infoView($id){
+
+        // query memanggil data member/admin
+        $data['member'] = Member::where('members.group_id', $id)
+        ->where('members.user_id', Auth::id())->get();
+        $data['admin'] = Admin::where('admins.group_id', $id)
+        ->where('admins.user_id', Auth::id())->get();
+        $data['group'] = array();
+        // validasi apakah member atau admin
+        try{
+            if(sizeof($data['member']) != 0 || sizeof($data['admin']) != 0 ){
+                $data['group'] = Group::where('groups.id', $id)->get();
+            }else{
+                $data['group'] = array();
+            }
+        }catch(ErrorException $e){
+            $data['group'] = array();
+        }
+
+        // query memanggil data owner dari group
+        $data['owner'] = Admin::where('admins.group_id', $id)
+        ->join('users','admins.user_id','users.id')
+        ->selectRaw('name')
+        ->get();
+
+        // validasi apakah data group kosong atau tidak
+        try{
+            if(sizeof($data['group']) != 0){
+                return view('pages.info', compact('data'));
+            }else{
+                return redirect('/group');
+            }
+        }catch(ErrorException $e){
+            return redirect('/group');
+        }
+        // return response()->json($data, 200);
     }
 }

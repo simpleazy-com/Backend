@@ -182,6 +182,19 @@ a.putih:hover{
 .group-detail-info{
     padding: 5%;
 }
+.group-detail-adminship-tambah{
+    display: flex;
+    flex-direction: row;
+}
+.group-detail-adminship-tambah p{
+    width: max-content;
+}
+.group-detail-adminship-tambah select{
+    width: 50%;
+}
+.group-detail-adminship-tambah div{
+    width: max-content;
+}
   /* Responsive layout - makes a one column layout instead of a two-column layout */
   @media (max-width: 800px) {
     div.flex-wrap a, .group-content div.p-2{
@@ -222,4 +235,7 @@ a.putih:hover{
     .group-detail-list-payment{
         width: 100% !important;
     }
+    .group-detail-adminship-tambah select{
+        margin-top: 5%;
+    } 
   }

@@ -44,6 +44,8 @@ Route::middleware(['auth'])->group(function(){
 
     Route::post('/group/join', 'GroupController@join')->middleware(['isValidCode','groupMode']);
 
+    Route::get('/group/{id}/info', 'GroupController@infoView');
+
     Route::middleware(['isAdmin'])->group(function(){
         // Owner and admin can change this route
         Route::get('/group/{id}/settings', 'AdminController@settingsView');
@@ -70,7 +72,7 @@ Route::middleware(['auth'])->group(function(){
             Route::get('/group/{id}/adminship', 'AdminController@adminship');
             Route::get('/group/{id}/adminship/add', 'AdminController@addAdminshipView');
             Route::post('/group/{id}/adminship/add', 'AdminController@addAdminship')->middleware('checkAdmin');
-            Route::get('/group/{id}/adminship/{user_id}/demote', 'AdminController@demoteAdminshipStatus');
+            Route::post('/group/{id}/adminship/demote', 'AdminController@demoteAdminshipStatus');
         });
 
     });
