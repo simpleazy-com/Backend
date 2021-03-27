@@ -16,15 +16,14 @@ use Auth;
 class GroupController extends Controller
 {
     public function groupList(){
-        $data['owned'] = Admin::where('user_id', Auth::id())
+        $data['owned'] = Admin::where('user_id', Auth::user()->id)
         ->join('groups','admins.group_id','groups.id')
         ->where('role', 'owner')
         ->get();
-        $data['joined'] = Member::where('user_id', Auth::id())
-        ->join('groups','members.group_id','groups.id')
-        ->get();
-        return 
-        view('pages.group', compact('data'));
+        $data['joined'] = DB::table('members')
+        ->join('groups', 'members.group_id', 'groups.id')
+        ->where('members.user_id', Auth::user()->id)->get();
+        return view('pages.group', compact('data'));
     }
 
     public function createView(){
