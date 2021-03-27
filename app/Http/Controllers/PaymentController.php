@@ -23,7 +23,6 @@ class PaymentController extends Controller
             ->where('members.status', 'accepted')
             ->where('members.group_id', $id)
             ->get();
-        
         return response()->json($memberList, 200);
     }
 

@@ -19,12 +19,14 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::redirect('home','dashboard'); //Kudu teang auth route
+// Route::redirect('home','dashboard'); 
+//Kudu teang auth route
 
 Route::middleware(['auth'])->group(function(){
 
     Route::get('/logout', function(){
         Auth::logout();
+        return redirect('/dashboard');
     });
 
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');

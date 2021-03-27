@@ -75,7 +75,7 @@ class AdminController extends Controller
             Member::where('user_id', $request->get('user_id'))->delete();
         }
 
-        return redirect('/group/'.$request->route('id').'/pending');
+        return redirect('/group/'.$request->route('id').'/member');
 
     }
 
@@ -87,14 +87,11 @@ class AdminController extends Controller
             ->where('isAdmin', true)
             ->where('group_id', $id)
             ->get();
-        $data['group_id'] = $id;
-        return 
-        view('pages.adminList', compact('data'));
-        // response()->json($data,200);
+            $data['group_id'] = $id;
+        return view('pages.adminList', compact('data'));
     }
 
     public function addAdminshipView($group_id){
-        // fetch member room
         $data['users'] = DB::table('members')
             ->select(['name','members.user_id'])
             ->join('users','members.user_id','users.id')
@@ -124,7 +121,9 @@ class AdminController extends Controller
         $admin->role = $request->get('role');
         $admin->save();
 
-        $changeMemberStatus = Member::where('user_id', $admin->user_id)->first();
+        $changeMemberStatus = Member::where('user_id', $admin->user_id)
+        ->where('group_id', $admin->group_id)
+        ->first();
         $changeMemberStatus->isAdmin = true;
         $changeMemberStatus->save();
 

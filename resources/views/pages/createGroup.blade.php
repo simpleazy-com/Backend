@@ -1,17 +1,30 @@
 @extends('layouts.app')
 
 @section('content')
-    <form action="/group/create" method="POST">
-        @csrf
-        Nama Group
-        <input type="text" name="name">
-        Deskripsi
-        <textarea name="description" cols="30" rows="10"></textarea>
-        <select name="mode">
-            @foreach ($mode as $m)
-                <option value="{{ $m }}">{{ $m }}</option>
-            @endforeach
-        </select>
-        <button type="submit">Buat</button>
-    </form>
+<div class="konten group-form-content">
+    <div class="group-form-flex p-3">
+        <form action="/group/create" method="post">
+            @csrf
+            <div class="form-group">
+                <label for="inputname">Nama Group</label>
+                <input type="text" name="name" id="inputname" class="form-control" placeholder="e.g : Kelas Simpleazy">
+            </div>
+            <div class="form-group">
+                <label for="inputdescription">Deskripsi</label>
+                <textarea name="description" id="inputdescription" class="form-control" rows="4" placeholder="e.g : Kas Bulanan Member Komunitas Simpleazy"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="inputmode">Mode</label>
+                <select name="mode" id="inputmode" class="form-control">
+                    @foreach($mode as $m)
+                    <option value="{{ $m }}">{{ $m }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="profile-button">
+                <button type="submit" class="btn">Buat</button>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection

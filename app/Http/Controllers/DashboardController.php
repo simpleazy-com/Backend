@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Group;
 use App\Admin;
 use App\Member;
+use App\User;
 
 class DashboardController extends Controller
 {
@@ -33,6 +34,6 @@ class DashboardController extends Controller
         ->where('role', 'owner')
         ->get();
         $data['joined'] = Member::where('user_id', Auth::id())->get();
-        return view('home', compact('data'));
+        return view('pages.dashboard', compact('data'));
     }   
 }
