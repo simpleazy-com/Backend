@@ -95,7 +95,6 @@ class GroupController extends Controller
 
         return 
         view('pages.detailGroup',compact('data'));
-        // response()->json($group, 200);
     }
 
     public function joinView(){
@@ -106,6 +105,10 @@ class GroupController extends Controller
 
         $code = $request->get('code');
         $group = Group::where('code', $code)->first();
+
+        if(Member::where('user_id', Auth::user()->id)->where('group_id', $group->id)->first()){
+            return response()->json(['Already Joined'], 400);
+        }
 
         try{
             $member = new Member();
