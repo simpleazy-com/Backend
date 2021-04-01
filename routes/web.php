@@ -47,6 +47,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/group/join', 'GroupController@join')->middleware(['isValidCode','groupMode']);
 
     Route::get('/group/{id}/info', 'GroupController@infoView');
+    Route::get('/group/{id}/payment','PaymentController@index');
 
     Route::middleware(['isAdmin'])->group(function(){
         // Owner and admin can change this route
@@ -54,11 +55,9 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/group/{id}/settings', 'AdminController@settings');
 
         // User request to join group with 'invite_only' mode 
-        Route::get('/group/{id}/pending', 'AdminController@userInPending');
         Route::post('/group/{id}/pending', 'AdminController@userChangeStatus');
         
         // Payment routes
-        Route::get('/group/{id}/payment','PaymentController@index');        
         Route::get('/group/{id}/payment/add','PaymentController@addPaymentView');
         Route::post('/group/{id}/payment/add','PaymentController@addPayment');
         Route::post('/group/{id}/payment/{user_id}', 'PaymentController@userDetailPayment');

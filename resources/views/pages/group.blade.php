@@ -28,8 +28,8 @@
         @foreach ($data['joined'] as $joined)
             <div class="p-2">
                 <h5 class="card-title">
-                    <a href="/group/{{ $joined -> id }}/settings"><span class="fa fa-cog h5 float-right"></span></a>
-                    <a href="/group/{{ $joined -> id }}">{{ $joined -> name }}</a>
+                    <a href="/group/{{ $joined -> group_id }}/settings"><span class="fa fa-cog h5 float-right"></span></a>
+                    <a href="/group/{{ $joined -> group_id }}">{{ $joined -> name }}</a>
                 </h5>
                 <p class="card-text">{{ $joined -> description }}</p>
                 <p class="card-text h6">{{ $joined -> owner_name }}</p>

@@ -21,6 +21,7 @@ class GroupController extends Controller
         ->join('users', 'admins.user_id', 'users.id')
         ->join('groups','admins.group_id','groups.id')
         ->selectRaw('users.name as user_name, groups.id as group_id, groups.*, admins.*')
+        ->where('role', 'owner')
         ->get();
 
         // $data['joined'] = Member::where('members.user_id', Auth::id())
@@ -126,7 +127,9 @@ class GroupController extends Controller
         $group = Group::where('code', $code)->first();
 
         if(Member::where('user_id', Auth::user()->id)->where('group_id', $group->id)->first()){
-            return response()->json(['Already Joined'], 400);
+            return 
+            redirect('/group');
+            // response()->json(['Already Joined'], 400);
         }
 
         try{
@@ -136,10 +139,14 @@ class GroupController extends Controller
             $member->group_id = $group->id;
             $member->save();
         }catch(Exception $e){
-            return response()->json($e->errors(), 400);
+            return 
+            redirect('/group');
+            // response()->json($e->errors(), 400);
         }
 
-        return response()->json(compact('group','member'), 201);
+        return 
+        redirect('/group');
+        // response()->json(compact('group','member'), 201);
 
     }
 
@@ -155,6 +162,7 @@ class GroupController extends Controller
         $data['pending'] = DB::table('members')
             ->select(['name','members.user_id', 'members.group_id'])
             ->join('users','members.user_id','users.id')
+            ->where('group_id', $id)
             ->where('status','pending')
             ->get();
 

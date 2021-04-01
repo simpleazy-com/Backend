@@ -72,7 +72,9 @@ class AdminController extends Controller
         $member->save();
         
         if($member->status == 'rejected'){
-            Member::where('user_id', $request->get('user_id'))->delete();
+            Member::where('user_id', $request->get('user_id'))
+            ->where('group_id', $member->group_id)
+            ->delete();
         }
 
         return redirect('/group/'.$request->route('id').'/member');
