@@ -21,7 +21,9 @@ Auth::routes();
 
 // Route::redirect('home','dashboard'); 
 //Kudu teang auth route
-
+Route::get('/home', function(){
+    return redirect('/dashboard');
+});
 Route::middleware(['auth'])->group(function(){
 
     Route::get('/logout', function(){

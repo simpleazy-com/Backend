@@ -73,7 +73,9 @@ class GroupController extends Controller
         $owner->role = 'owner';
         $owner->save();
 
-        return response()->json(compact('group','owner'), 201);
+        return 
+        redirect('/group');
+        // response()->json(compact('group','owner'), 201);
         
     }
 
