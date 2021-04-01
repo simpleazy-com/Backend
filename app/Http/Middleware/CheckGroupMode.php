@@ -33,7 +33,7 @@ class CheckGroupMode
             return response()->json(['Invalid room code'], 400);
         }
         
-        if(Admin::where('user_id', Auth::user()->id)->where('group_id', $group->id)->where('role', 'owner')->orWhere('role','admin')->first()){
+        if(Admin::where('user_id', Auth::user()->id)->where('group_id', $group->id)->where('role', 'owner')->first()){
            return response()->json(['Redirecting to your room'], 400); 
         }
         

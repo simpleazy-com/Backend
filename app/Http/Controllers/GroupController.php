@@ -114,7 +114,6 @@ class GroupController extends Controller
 
         return 
         view('pages.detailGroup',compact('data'));
-        // response()->json($group, 200);
     }
 
     public function joinView(){
@@ -124,40 +123,20 @@ class GroupController extends Controller
     public function join(Request $request){
 
         $code = $request->get('code');
-
         $group = Group::where('code', $code)->first();
 
-        if(Member::where('user_id', Auth::user()->id)->first()){
-            return response()->json(['Already Join'], 400);
+        if(Member::where('user_id', Auth::user()->id)->where('group_id', $group->id)->first()){
+            return response()->json(['Already Joined'], 400);
         }
 
-        if(Admin::where('user_id', Auth::user()->id)->first()){
-            return response()->json(['Cannot join to your owned room'], 400);
-        }  
-
-        if(Member::where('user_id', Auth::user()->id)
-            ->where('group_id', $group->id)
-            ->whereIn('status', ['pending','accepted'])
-            ->first()
-        ){
-            return response()->json(['Already Join'], 400);
-        }
-
-        if(Group::where('mode', 'opened')->where('id', $group->id)->first()){
+        try{
             $member = new Member();
             $member->status = 'accepted';
             $member->user_id = Auth::user()->id;
             $member->group_id = $group->id;
             $member->save();
-        }else{
-            try{
-                $member = new Member();
-                $member->user_id = Auth::user()->id;
-                $member->group_id = $group->id;
-                $member->save();
-            }catch(Exception $e){
-                return response()->json($e->errors(), 400);
-            }
+        }catch(Exception $e){
+            return response()->json($e->errors(), 400);
         }
 
         return response()->json(compact('group','member'), 201);
@@ -174,16 +153,12 @@ class GroupController extends Controller
             ->get();
 
         $data['pending'] = DB::table('members')
-            ->select(['name','members.user_id'])
+            ->select(['name','members.user_id', 'members.group_id'])
             ->join('users','members.user_id','users.id')
             ->where('status','pending')
             ->get();
 
         return view('pages.member', $data);
-        // view('pages.member',$data);
-            
-        // Raw queries debugger lol
-        // return DB::table('members')->join('groups','members.group_id','groups.id')->get();
     }
 
     public function infoView($id){

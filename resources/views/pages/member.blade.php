@@ -16,9 +16,9 @@
             <?php $i = 1 ?>
             @foreach($memberList as $member)
                 <tr>
-                    <th scope="row">{{ $i }} </th>
-                    <td>{{ $member->name }} </td>
-                    <td>{{ $member->isAdmin == 1?"Admin":"Member" }} </td>
+                    <td>{{ $i }}</td>
+                    <td>{{ $member->name }}</td>
+                    <td>{{ $member->isAdmin ? 'Admin' : 'Member' }}</td>
                 </tr>
                 <?php $i++ ?>
             @endforeach
@@ -44,8 +44,9 @@
                         <th scope="row">{{ $i }} </th>
                         <td>{{ $member->name }} </td>
                         <input type="hidden" name="user_id" value="{{ $member->user_id }}">
-                        <td><button type="submit" class="btn btn-success" value="accepted" name="status">Accept</button>
-                        <button type="submit" value="rejected" class="btn btn-danger" name="status">Reject</button></td>
+                        <input type="hidden" name="group_id" value="{{ $member->group_id }}">
+                        <td><button type="submit" value="accepted" name="status">Accept</button></td>
+                        <button type="submit" value="rejected" name="status">Reject</button>
                     </tr>
                     <?php $i++ ?>
                 </form>

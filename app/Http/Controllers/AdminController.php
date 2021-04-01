@@ -45,9 +45,8 @@ class AdminController extends Controller
     }
 
     public function userInPending($id){
-        // $pending = Member::where('group_id', $id)->get();
         $data['pending'] = DB::table('members')
-            ->select(['name','members.user_id'])
+            ->select(['name','members.user_id', 'members.group_id'])
             ->join('users','members.user_id','users.id')
             ->where('status','pending')
             ->get();
@@ -58,14 +57,17 @@ class AdminController extends Controller
     public function userChangeStatus(Request $request){
         $validated = Validator::make($request->all(), [
             'status' => 'string',
-            'user_id' => 'required'
+            'user_id' => 'required',
+            'group_id' => 'required'
         ]);
 
         if($validated->fails()){
             return response()->json($validated->errors(), 400);
         }
 
-        $member = Member::where('user_id', $request->get('user_id'))->first();
+        $member = Member::where('user_id', $request->get('user_id'))
+        ->where('group_id', $request->get('group_id'))
+        ->first();
         $member->status = $request->get('status');
         $member->save();
         
@@ -85,14 +87,11 @@ class AdminController extends Controller
             ->where('isAdmin', true)
             ->where('group_id', $id)
             ->get();
-        $data['group_id'] = $id;
-        return 
-        view('pages.adminList', compact('data'));
-        // response()->json($data,200);
+            $data['group_id'] = $id;
+        return view('pages.adminList', compact('data'));
     }
 
     public function addAdminshipView($group_id){
-        // fetch member room
         $data['users'] = DB::table('members')
             ->select(['name','members.user_id'])
             ->join('users','members.user_id','users.id')
@@ -122,7 +121,9 @@ class AdminController extends Controller
         $admin->role = $request->get('role');
         $admin->save();
 
-        $changeMemberStatus = Member::where('user_id', $admin->user_id)->first();
+        $changeMemberStatus = Member::where('user_id', $admin->user_id)
+        ->where('group_id', $admin->group_id)
+        ->first();
         $changeMemberStatus->isAdmin = true;
         $changeMemberStatus->save();
 
