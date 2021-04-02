@@ -51,7 +51,7 @@ Route::middleware(['auth'])->group(function(){
 
         // User request to join group with 'invite_only' mode 
         Route::get('/group/{id}/pending', 'AdminController@userInPending');
-        Route::post('/group/{id}/pending', 'AdminController@userChangeStatus');
+        Route::post('/group/{id}/pending', 'AdminController@changePendingStatus');
         
         // Payment routes
         Route::get('/group/{id}/payment','PaymentController@index');        
@@ -71,6 +71,7 @@ Route::middleware(['auth'])->group(function(){
             Route::get('/group/{id}/adminship/add', 'AdminController@addAdminshipView');
             Route::post('/group/{id}/adminship/add', 'AdminController@addAdminship')->middleware('checkAdmin');
             Route::get('/group/{id}/adminship/{user_id}/demote', 'AdminController@demoteAdminshipStatus');
+            Route::post('/group/{group_id}/member/kick', 'AdminController@kickMember');
         });
 
     });

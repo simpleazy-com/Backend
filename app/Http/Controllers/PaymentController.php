@@ -18,19 +18,19 @@ class PaymentController extends Controller
 {
     public function index($id){
         $memberList = DB::table('members')
-            ->join('users', 'members.user_id','users.id')
-            ->select('users.name','users.id')
-            ->where('members.status', 'accepted')
-            ->where('members.group_id', $id)
-            ->get();
+                    ->join('users', 'members.user_id','users.id')
+                    ->select('users.name','users.id')
+                    ->where('members.status', 'accepted')
+                    ->where('members.group_id', $id)
+                    ->get();
         return response()->json($memberList, 200);
     }
 
     public function addPaymentView($id){
         $memberList = DB::table('members')
-            ->join('users', 'members.user_id','users.id')
-            ->where('group_id',$id)
-            ->get();
+                    ->join('users', 'members.user_id','users.id')
+                    ->where('group_id',$id)
+                    ->get();
         return view('pages.addPayment', compact('memberList'));
     }
 
@@ -97,11 +97,11 @@ class PaymentController extends Controller
 
     public function checkUserPaymentStatus($id, $user_id){
         $listPayment = DB::table('set_payment')
-            ->join('member_payment_status', 'set_payment.id', 'member_payment_status.payment_id')
-            ->select('set_payment.nominal', 'set_payment.index_row', 'member_payment_status.status')
-            ->where('set_payment.group_id', $id)
-            ->where('member_payment_status.user_id', $user_id)
-            ->get();
+                    ->join('member_payment_status', 'set_payment.id', 'member_payment_status.payment_id')
+                    ->select('set_payment.nominal', 'set_payment.index_row', 'member_payment_status.status')
+                    ->where('set_payment.group_id', $id)
+                    ->where('member_payment_status.user_id', $user_id)
+                    ->get();
 
         return response()->json($listPayment, 200);
     }
@@ -112,12 +112,12 @@ class PaymentController extends Controller
 
     public function paymentList($id){
         $listPayment = DB::table('set_payment')
-            ->join('member_payment_status', 'set_payment.id', 'member_payment_status.payment_id')
-            ->join('members', 'set_payment.group_id','members.group_id')
-            ->select('members.user_id','set_payment.nominal', 'set_payment.index_row','member_payment_status.status')
-            ->where('set_payment.group_id', $id)
-            ->get();
-            
+                    ->join('member_payment_status', 'set_payment.id', 'member_payment_status.payment_id')
+                    ->join('members', 'set_payment.group_id','members.group_id')
+                    ->select('members.user_id','set_payment.nominal', 'set_payment.index_row','member_payment_status.status')
+                    ->where('set_payment.group_id', $id)
+                    ->get();
+                    
         return response()->json($listPayment, 200); 
     }
 

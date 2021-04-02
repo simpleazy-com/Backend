@@ -11,6 +11,7 @@ use App\Group;
 use App\Admin;
 use App\Member;
 use App\SetPayment;
+use App\Log;
 use Auth;
 
 class GroupController extends Controller
@@ -20,9 +21,11 @@ class GroupController extends Controller
         ->join('groups','admins.group_id','groups.id')
         ->where('role', 'owner')
         ->get();
+
         $data['joined'] = DB::table('members')
         ->join('groups', 'members.group_id', 'groups.id')
         ->where('members.user_id', Auth::user()->id)->get();
+        
         return view('pages.group', compact('data'));
     }
 
@@ -60,7 +63,6 @@ class GroupController extends Controller
     }
 
     public function groupDetail($id){
-
         $isAdmin;
         $verif = Admin::where('group_id', $id)
         ->join('groups','admins.group_id','groups.id')
@@ -92,8 +94,7 @@ class GroupController extends Controller
         ->orderBy('deadline')
         ->get();
 
-        return 
-        view('pages.detailGroup',compact('data'));
+        return view('pages.detailGroup',compact('data'));
     }
 
     public function joinView(){
@@ -105,7 +106,9 @@ class GroupController extends Controller
         $code = $request->get('code');
         $group = Group::where('code', $code)->first();
 
-        if(Member::where('user_id', Auth::user()->id)->where('group_id', $group->id)->first()){
+        $isJoined = Member::where('user_id', Auth::user()->id)->where('group_id', $group->id)->first();
+
+        if($isJoined){
             return response()->json(['Already Joined'], 400);
         }
 
@@ -126,7 +129,7 @@ class GroupController extends Controller
     public function memberList($id){
         $data['memberList'] = DB::table('members')
             ->join('users', 'members.user_id', 'users.id')
-            ->select('users.name', 'members.isAdmin')
+            ->select('users.id','users.name', 'members.isAdmin')
             ->where('group_id', $id)
             ->where('status', 'accepted')
             ->get();

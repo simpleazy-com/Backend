@@ -14,8 +14,6 @@ use Auth;
 
 class AdminController extends Controller
 {
-    //Berisi Bisnis Logic Buat Admin
-
     public function settingsView($id){
         $group = Group::find($id);
         $mode = ['invite only', 'opened', 'closed'];
@@ -54,7 +52,7 @@ class AdminController extends Controller
         return view('pages.member', $data);
     }
 
-    public function userChangeStatus(Request $request){
+    public function changePendingStatus(Request $request){
         $validated = Validator::make($request->all(), [
             'status' => 'string',
             'user_id' => 'required',
@@ -66,12 +64,13 @@ class AdminController extends Controller
         }
 
         $member = Member::where('user_id', $request->get('user_id'))
-        ->where('group_id', $request->get('group_id'))
-        ->first();
+                ->where('group_id', $request->get('group_id'))
+                ->first();
         $member->status = $request->get('status');
         $member->save();
         
         if($member->status == 'rejected'){
+            //Log ke db biar ada notif ketolak
             Member::where('user_id', $request->get('user_id'))->delete();
         }
 
@@ -81,13 +80,13 @@ class AdminController extends Controller
 
     public function adminship($id){
         $data['users'] = DB::table('members')
-            ->select(['name','members.user_id','members.isAdmin'])
-            ->join('users','members.user_id','users.id')
-            ->where('status','accepted')
-            ->where('isAdmin', true)
-            ->where('group_id', $id)
-            ->get();
-            $data['group_id'] = $id;
+                        ->select(['name','members.user_id','members.isAdmin'])
+                        ->join('users','members.user_id','users.id')
+                        ->where('status','accepted')
+                        ->where('isAdmin', true)
+                        ->where('group_id', $id)
+                        ->get();
+        $data['group_id'] = $id;
         return view('pages.adminList', compact('data'));
     }
 
@@ -143,6 +142,26 @@ class AdminController extends Controller
         $changeMemberStatus->save();
 
         return response()->json($changeMemberStatus, 201);
+    }
+
+    public function kickMember(Request $request, $group_id){
+        $validated = Validator::make($request->all(), [
+            'user_id' => 'required',
+        ]);
+
+        if($validated->fails()){
+            return response()->json($validated->errors(), 400);
+        }
+
+        try{
+            $kickedMember = Member::where('user_id', $request->get('user_id'))
+            ->where('group_id', $group_id)
+            ->delete();
+        }catch(Exception $e){
+            return response()->json($e, 400);
+        }
+        
+        return back();
     }
 
 }
