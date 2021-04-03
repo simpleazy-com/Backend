@@ -73,7 +73,8 @@ Route::middleware(['auth'])->group(function(){
             Route::get('/group/{id}/adminship', 'AdminController@adminship');
             Route::get('/group/{id}/adminship/add', 'AdminController@addAdminshipView');
             Route::post('/group/{id}/adminship/add', 'AdminController@addAdminship')->middleware('checkAdmin');
-            Route::post('/group/{id}/adminship/demote', 'AdminController@demoteAdminshipStatus');
+            Route::get('/group/{id}/adminship/{user_id}/demote', 'AdminController@demoteAdminshipStatus');
+            Route::post('/group/{group_id}/member/kick', 'AdminController@kickMember');
         });
 
     });

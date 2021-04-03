@@ -11,6 +11,7 @@ use App\Group;
 use App\Admin;
 use App\Member;
 use App\SetPayment;
+use App\Log;
 use Auth;
 
 class GroupController extends Controller
@@ -81,7 +82,6 @@ class GroupController extends Controller
     }
 
     public function groupDetail($id){
-
         $isAdmin;
         $verif = Admin::where('group_id', $id)
         ->join('groups','admins.group_id','groups.id')
@@ -113,8 +113,7 @@ class GroupController extends Controller
         ->orderBy('id', 'desc')
         ->get();
 
-        return 
-        view('pages.detailGroup',compact('data'));
+        return view('pages.detailGroup',compact('data'));
     }
 
     public function joinView(){
@@ -153,7 +152,7 @@ class GroupController extends Controller
     public function memberList($id){
         $data['memberList'] = DB::table('members')
             ->join('users', 'members.user_id', 'users.id')
-            ->select('users.name', 'members.isAdmin')
+            ->select('users.id','users.name', 'members.isAdmin')
             ->where('group_id', $id)
             ->where('status', 'accepted')
             ->orderBy('isAdmin','desc')

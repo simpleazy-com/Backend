@@ -20,9 +20,10 @@ class IsAdmin
      */
     public function handle($request, Closure $next)
     {
-        
+        //Logika kurang, 'admin' disini yang dimaksud owner bukan 'admin' group
         $group_id = $request->route('id'); 
-        if(! Admin::where('group_id', $group_id)->where('user_id', Auth::user()->id)->first()){
+        $isAdmin = Admin::where('group_id', $group_id)->where('user_id', Auth::user()->id)->first();
+        if(!$isAdmin){
             return response()->json(['message' => 'Access Forbidden'], 403);
         }
 
