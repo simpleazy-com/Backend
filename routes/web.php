@@ -65,6 +65,8 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/group/{id}/payment/{user_id}', 'PaymentController@checkUserPaymentStatus')->where('user_id', '[0-9999999]+');
         Route::get('/group/{id}/payment/{user_id}/{index_row}', 'PaymentController@userDetailPayment');
         Route::get('/group/{id}/payment/list', 'PaymentController@paymentList');
+
+        Route::get('/group/{id}/paymentadmin','PaymentController@paymentAdminView');
         
         // Statistic
         Route::get('/group/{id}/payment/status', 'PaymentController@graph');
@@ -73,9 +75,8 @@ Route::middleware(['auth'])->group(function(){
             Route::get('/group/{id}/adminship', 'AdminController@adminship');
             Route::get('/group/{id}/adminship/add', 'AdminController@addAdminshipView');
             Route::post('/group/{id}/adminship/add', 'AdminController@addAdminship')->middleware('checkAdmin');
-            Route::get('/group/{id}/adminship/{user_id}/demote', 'AdminController@demoteAdminshipStatus');
+            Route::post('/group/{id}/adminship/demote', 'AdminController@demoteAdminshipStatus');
             Route::post('/group/{group_id}/member/kick', 'AdminController@kickMember');
         });
-
     });
 });
