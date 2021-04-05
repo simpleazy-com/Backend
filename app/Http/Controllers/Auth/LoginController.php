@@ -61,6 +61,8 @@ class LoginController extends Controller
             $newUser->name = $user->name;
             $newUser->email = $user->email;
             $newUser->save();
+
+            auth()->login($newUser, true);
         }
 
         return redirect('/dashboard');
