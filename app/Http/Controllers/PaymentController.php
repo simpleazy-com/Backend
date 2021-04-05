@@ -17,13 +17,16 @@ use App\MemberPaymentStatus;
 class PaymentController extends Controller
 {
     public function index($id){
+        // List Tagihan/payment milik sendiri
         $memberList = DB::table('members')
                     ->join('users', 'members.user_id','users.id')
                     ->select('users.name','users.id')
                     ->where('members.status', 'accepted')
                     ->where('members.group_id', $id)
                     ->get();
-        return response()->json($memberList, 200);
+        return 
+        view('pages.paymentView');
+        // response()->json($memberList, 200);
     }
 
     public function addPaymentView($id){
@@ -121,4 +124,9 @@ class PaymentController extends Controller
         return response()->json($listPayment, 200); 
     }
 
+    public function paymentAdminView($id){
+        // List tagihan beserta berapa orang yang bayar dibanding semua yang menerima kontrak tagihan
+        $data['id'] = $id;
+        return view('pages.paymentAdmin', compact('data'));
+    }
 }

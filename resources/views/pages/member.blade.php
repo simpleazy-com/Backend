@@ -45,8 +45,8 @@
                         <td>{{ $member->name }} </td>
                         <input type="hidden" name="user_id" value="{{ $member->user_id }}">
                         <input type="hidden" name="group_id" value="{{ $member->group_id }}">
-                        <td><button type="submit" value="accepted" name="status">Accept</button></td>
-                        <button type="submit" value="rejected" name="status">Reject</button>
+                        <td><button type="submit" class="btn btn-success" value="accepted" name="status">Accept</button>
+                        <button type="submit" value="rejected" class="btn btn-danger" name="status">Reject</button></td>
                     </tr>
                     <?php $i++ ?>
                 </form>
