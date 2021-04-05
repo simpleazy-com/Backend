@@ -19,8 +19,9 @@ Route::get('/', function () {
 
 Auth::routes();
 
-// Route::redirect('home','dashboard'); 
-//Kudu teang auth route
+//Socialite
+Route::get('/redirect', 'Auth\LoginController@redirectToProvider');
+Route::get('/callback', 'Auth\LoginController@handleProviderCallback');
 
 Route::middleware(['auth'])->group(function(){
 

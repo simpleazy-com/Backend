@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Laravel\Socialite\Facades\Socialite;
+
+use App\User;
 
 class LoginController extends Controller
 {
@@ -37,4 +40,31 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+    public function redirectToProvider(){
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function handleProviderCallback(){
+        try{
+            $user = Socialite::driver('google')->user();
+        }catch(Exception $e){
+            return redirect('/login');
+        }
+
+        $alreadyExistUser = User::where('email', $user->email)->first();
+
+        if($alreadyExistUser){
+            auth()->login($alreadyExistUser, true);
+        }else{
+            $newUser = new User;
+            $newUser->name = $user->name;
+            $newUser->email = $user->email;
+            $newUser->save();
+        }
+
+        return redirect('/dashboard');
+
+    }
+
 }
