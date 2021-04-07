@@ -11,7 +11,7 @@ use App\Mail\DeadlineMail;
 
 use Mail;
 
-class InvoiceStartScheduleListener
+class InvoiceStartScheduleListener implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -31,6 +31,7 @@ class InvoiceStartScheduleListener
      */
     public function handle($event)
     {
+        sleep(10);
         $group_id = $event->payment->group_id;
         $index_row = $event->payment->index_row;
 
