@@ -13,23 +13,25 @@ class LoginTest extends TestCase
      *
      * @return void
      */
-    public function logging_in_user_into_app(){
-        $user = [
-            'email' => $this->user->email,
-            'password' => 'secret'
-        ];
 
-        $response = $this->postJson('/login', $user);
+     
+    // public function test_logging_in_user_into_app(){
+    //     $user = [
+    //         'email' => 'dummy@email.com',
+    //         'password' => 'secret'
+    //     ];
 
-        $response->assertStatus(200)->assertJson([
-            'user' => [
-                'email' => $this->user->email,
-                'name' => $this->user->name,
-                'image' => $this->user->image
-            ]
-        ]);
+    //     $response = $this->post('/login', $user);
 
-        $response->assertTrue(true);
+    //     $response->assertStatus(200)->assertJson([
+    //         'user' => [
+    //             'email' => $this->user->email,
+    //             'name' => $this->user->name,
+    //             'image' => $this->user->image
+    //         ]
+    //     ]);
 
-    }
+    //     $response->assertTrue(true);
+
+    // }
 }
