@@ -7,12 +7,15 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 use App\Events\InvoiceHasCreatedEvent;
+use App\Jobs\SendEmailReminder;
+
 
 use Auth;
 use App\Group;
 use App\Member;
 use App\SetPayment;
 use App\MemberPaymentStatus;
+
 
 class PaymentController extends Controller
 {
@@ -26,7 +29,6 @@ class PaymentController extends Controller
                     ->get();
         return 
         view('pages.paymentView');
-        // response()->json($memberList, 200);
     }
 
     public function addPaymentView($id){
@@ -99,11 +101,13 @@ class PaymentController extends Controller
     }
 
     public function checkUserPaymentStatus($id, $user_id){
+        $member_id = Member::where('user_id')->where('group_id', $id)->first();
+
         $listPayment = DB::table('set_payment')
                     ->join('member_payment_status', 'set_payment.id', 'member_payment_status.payment_id')
                     ->select('set_payment.nominal', 'set_payment.index_row', 'member_payment_status.status')
                     ->where('set_payment.group_id', $id)
-                    ->where('member_payment_status.user_id', $user_id)
+                    ->where('member_payment_status.member_id', $member_id)
                     ->get();
 
         return response()->json($listPayment, 200);
@@ -117,7 +121,7 @@ class PaymentController extends Controller
         $listPayment = DB::table('set_payment')
                     ->join('member_payment_status', 'set_payment.id', 'member_payment_status.payment_id')
                     ->join('members', 'set_payment.group_id','members.group_id')
-                    ->select('members.user_id','set_payment.nominal', 'set_payment.index_row','member_payment_status.status')
+                    ->select('members.user_id','set_payment.nominal', 'set_payment.index_row','member_payment_status.status', 'member_payment_status.id')
                     ->where('set_payment.group_id', $id)
                     ->get();
                     
@@ -128,5 +132,16 @@ class PaymentController extends Controller
         // List tagihan beserta berapa orang yang bayar dibanding semua yang menerima kontrak tagihan
         $data['id'] = $id;
         return view('pages.paymentAdmin', compact('data'));
+    }
+
+    public function changeAsPaidPayment($id, Request $request){
+        $validated = Validator::make($request->all(), [
+            'member_payment_status_id', $request->id,
+            'user_id', $request->user_id
+        ]);
+
+        $memberChangeAsPaid = MemberPaymentStatus::find($request->id);
+        
+
     }
 }
