@@ -100,17 +100,16 @@ class PaymentController extends Controller
         return response()->json($payment, 201);
     }
 
-    public function checkUserPaymentStatus($id, $user_id){
-        $member_id = Member::where('user_id')->where('group_id', $id)->first();
+    public function checkUserPaymentStatus($id, $payment_id){
 
-        $listPayment = DB::table('set_payment')
-                    ->join('member_payment_status', 'set_payment.id', 'member_payment_status.payment_id')
-                    ->select('set_payment.nominal', 'set_payment.index_row', 'member_payment_status.status')
+        $listPayment = DB::table('member_payment_status')
+                    ->join('set_payment', 'member_payment_status.payment_id', 'set_payment.id')
+                    ->select('member_payment_status.member_id','set_payment.nominal', 'set_payment.index_row', 'member_payment_status.status','member_payment_status.id')
                     ->where('set_payment.group_id', $id)
-                    ->where('member_payment_status.member_id', $member_id)
+                    ->where('member_payment_status.payment_id', $payment_id)
                     ->get();
 
-        return response()->json($listPayment, 200);
+        return view('pages.paymentList', compact('listPayment'));
     }
 
     public function userDetailPayment($id, $user_id, $index_row){
@@ -136,12 +135,17 @@ class PaymentController extends Controller
 
     public function changeAsPaidPayment($id, Request $request){
         $validated = Validator::make($request->all(), [
-            'member_payment_status_id', $request->id,
-            'user_id', $request->user_id
+            'index_row', $request->index_row,
+            'member_id', $request->member_id,
+            'status', $request->status
         ]);
-
-        $memberChangeAsPaid = MemberPaymentStatus::find($request->id);
         
 
+        $memberChangeAsPaid = DB::table('set_payment')
+                                ->join('member_payment_status', 'set_payment.id', 'member_payment_status.payment_id')
+                                ->where('set_payment.index_row', $request->index_row)
+                                ->where('member_payment_status.member_id', $request->member_id)
+                                ->get();
+        dd($memberChangeAsPaid);
     }
 }

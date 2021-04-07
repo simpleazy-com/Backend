@@ -109,9 +109,7 @@ class GroupController extends Controller
             echo $e;
         }
 
-        $data['payment'] = SetPayment::where('group_id', $id)
-        ->orderBy('id', 'desc')
-        ->get();
+        $data['payment'] = SetPayment::where('group_id', $id)->get();
 
         return view('pages.detailGroup',compact('data'));
     }

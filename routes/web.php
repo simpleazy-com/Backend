@@ -63,10 +63,10 @@ Route::middleware(['auth'])->group(function(){
         // Payment routes
         Route::get('/group/{id}/payment/add','PaymentController@addPaymentView');
         Route::post('/group/{id}/payment/add','PaymentController@addPayment');
-        Route::post('/group/{id}/payment/{user_id}', 'PaymentController@userDetailPayment');
+        // Route::post('/group/{id}/payment/{user_id}', 'PaymentController@userDetailPayment');
 
-        Route::get('/group/{id}/payment/{user_id}', 'PaymentController@checkUserPaymentStatus')->where('user_id', '[0-9999999]+');
-        Route::get('/group/{id}/payment/{user_id}/{index_row}', 'PaymentController@userDetailPayment');
+        Route::get('/group/{id}/payment/{payment_id}', 'PaymentController@checkUserPaymentStatus')->where('payment_id', '[0-9999999]+');
+        Route::post('/group/{id}/payment/{payment_id}', 'PaymentController@changeAsPaidPayment');
         Route::get('/group/{id}/payment/list', 'PaymentController@paymentList');
 
         Route::get('/group/{id}/paymentadmin','PaymentController@paymentAdminView');
