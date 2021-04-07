@@ -7,12 +7,15 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 use App\Events\InvoiceHasCreatedEvent;
+use App\Jobs\SendEmailReminder;
+
 
 use Auth;
 use App\Group;
 use App\Member;
 use App\SetPayment;
 use App\MemberPaymentStatus;
+
 
 class PaymentController extends Controller
 {
@@ -26,7 +29,6 @@ class PaymentController extends Controller
                     ->get();
         return 
         view('pages.paymentView');
-        // response()->json($memberList, 200);
     }
 
     public function addPaymentView($id){
@@ -62,7 +64,6 @@ class PaymentController extends Controller
 
             // Invoice or Payment event occurs
             event(new InvoiceHasCreatedEvent($payment));
-
             // select all member in this group
 
             foreach($request->selected_member as $sm){
