@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+use App\Notifications\InvoiceHasCreatedNotification;
 use App\Events\InvoiceHasCreatedEvent;
 use App\Jobs\SendEmailReminder;
 
@@ -27,8 +28,8 @@ class PaymentController extends Controller
                     ->where('members.status', 'accepted')
                     ->where('members.group_id', $id)
                     ->get();
-        return 
-        view('pages.paymentView');
+
+        return view('pages.paymentView');
     }
 
     public function addPaymentView($id){
@@ -36,11 +37,11 @@ class PaymentController extends Controller
                     ->join('users', 'members.user_id','users.id')
                     ->where('group_id',$id)
                     ->get();
+
         return view('pages.addPayment', compact('memberList'));
     }
 
     public function addPayment(Request $request){
-        
         $validated = Validator::make($request->all(), [
             'nominal' => 'required|numeric',
             'selected_member[]' => 'boolean',
@@ -51,10 +52,12 @@ class PaymentController extends Controller
             return response()->json($validated->errors(), 400);
         }
 
-        $setPayment = SetPayment::select('index_row')->where('group_id', $request->route('id'))->latest()->first();
+        $setPayment = SetPayment::select('index_row')
+                    ->where('group_id', $request->route('id'))
+                    ->latest()
+                    ->first();
 
         if(!empty($setPayment)){     
-            
             $payment = new SetPayment();
             $payment->group_id = $request->route('id');
             $payment->index_row = $setPayment->index_row + 1;
@@ -66,7 +69,6 @@ class PaymentController extends Controller
             InvoiceHasCreatedEvent::dispatch($payment);
 
             // select all member in this group
-
             foreach($request->selected_member as $sm){
                 $paymentStatus = new MemberPaymentStatus();
                 $paymentStatus->member_id = $sm;
