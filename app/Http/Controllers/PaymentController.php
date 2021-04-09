@@ -6,13 +6,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+use App\Notifications\InvoiceHasCreatedNotification;
 use App\Events\InvoiceHasCreatedEvent;
+use App\Jobs\SendEmailReminder;
+
 
 use Auth;
 use App\Group;
 use App\Member;
 use App\SetPayment;
 use App\MemberPaymentStatus;
+
 
 class PaymentController extends Controller
 {
@@ -37,11 +41,11 @@ class PaymentController extends Controller
                     ->selectRaw('members.*, users.name')
                     ->where('group_id',$id)
                     ->get();
+
         return view('pages.addPayment', compact('memberList'));
     }
 
     public function addPayment(Request $request){
-        
         $validated = Validator::make($request->all(), [
             'nominal' => 'required|numeric',
             'selected_member[]' => 'boolean',
@@ -52,10 +56,12 @@ class PaymentController extends Controller
             return response()->json($validated->errors(), 400);
         }
 
-        $setPayment = SetPayment::select('index_row')->where('group_id', $request->route('id'))->latest()->first();
+        $setPayment = SetPayment::select('index_row')
+                    ->where('group_id', $request->route('id'))
+                    ->latest()
+                    ->first();
 
         if(!empty($setPayment)){     
-            
             $payment = new SetPayment();
             $payment->group_id = $request->route('id');
             $payment->index_row = $setPayment->index_row + 1;
@@ -103,15 +109,16 @@ class PaymentController extends Controller
         return response()->json($payment, 201);
     }
 
-    public function checkUserPaymentStatus($id, $user_id){
-        $listPayment = DB::table('set_payment')
-                    ->join('member_payment_status', 'set_payment.id', 'member_payment_status.payment_id')
-                    ->select('set_payment.nominal', 'set_payment.index_row', 'member_payment_status.status')
+    public function checkUserPaymentStatus($id, $payment_id){
+
+        $listPayment = DB::table('member_payment_status')
+                    ->join('set_payment', 'member_payment_status.payment_id', 'set_payment.id')
+                    ->select('member_payment_status.member_id','set_payment.nominal', 'set_payment.index_row', 'member_payment_status.status','member_payment_status.id')
                     ->where('set_payment.group_id', $id)
-                    ->where('member_payment_status.user_id', $user_id)
+                    ->where('member_payment_status.payment_id', $payment_id)
                     ->get();
 
-        return response()->json($listPayment, 200);
+        return view('pages.paymentList', compact('listPayment'));
     }
 
     public function userDetailPayment($id, $user_id, $index_row){
@@ -122,7 +129,7 @@ class PaymentController extends Controller
         $listPayment = DB::table('set_payment')
                     ->join('member_payment_status', 'set_payment.id', 'member_payment_status.payment_id')
                     ->join('members', 'set_payment.group_id','members.group_id')
-                    ->select('members.user_id','set_payment.nominal', 'set_payment.index_row','member_payment_status.status')
+                    ->select('members.user_id','set_payment.nominal', 'set_payment.index_row','member_payment_status.status', 'member_payment_status.id')
                     ->where('set_payment.group_id', $id)
                     ->get();
                     
@@ -170,5 +177,21 @@ class PaymentController extends Controller
         }
         // return response()->json($data['payment_status'], 200);
         return view('pages.paymentAdmin', compact('data'));
+    }
+
+    public function changeAsPaidPayment($id, Request $request){
+        $validated = Validator::make($request->all(), [
+            'index_row', $request->index_row,
+            'member_id', $request->member_id,
+            'status', $request->status
+        ]);
+        
+
+        $memberChangeAsPaid = DB::table('set_payment')
+                                ->join('member_payment_status', 'set_payment.id', 'member_payment_status.payment_id')
+                                ->where('set_payment.index_row', $request->index_row)
+                                ->where('member_payment_status.member_id', $request->member_id)
+                                ->get();
+        dd($memberChangeAsPaid);
     }
 }

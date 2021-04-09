@@ -91,6 +91,7 @@ button{
                                 @endif
 
                                 <a class="nav-link " href="{{ route('register') }}">{{ __('Belum punya akun? Daftar disini') }}</a>
+                                <a class="nav-link " href="/redirect">{{ __('Google') }}</a>
                             </div>
                         </div>
                     </form>
