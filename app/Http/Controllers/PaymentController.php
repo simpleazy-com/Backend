@@ -18,20 +18,23 @@ class PaymentController extends Controller
 {
     public function index($id){
         // List Tagihan/payment milik sendiri
-        $memberList = DB::table('members')
-                    ->join('users', 'members.user_id','users.id')
-                    ->select('users.name','users.id')
-                    ->where('members.status', 'accepted')
-                    ->where('members.group_id', $id)
-                    ->get();
+        $data['konten'] = MemberPaymentStatus::
+        join('members','member_payment_status.member_id','members.id')
+        ->join('set_payment','member_payment_status.payment_id','set_payment.id')
+        ->selectRaw('members.user_id, member_payment_status.payment_id, set_payment.nominal, set_payment.deadline, member_payment_status.status')
+        ->where('members.user_id',Auth::id())
+        ->where('set_payment.group_id', $id)
+        ->orderBy('set_payment.deadline', 'desc')
+        ->get();
         return 
-        view('pages.paymentView');
-        // response()->json($memberList, 200);
+        // response()->json($data, 200);
+        view('pages.paymentView', compact('data'));
     }
 
     public function addPaymentView($id){
         $memberList = DB::table('members')
                     ->join('users', 'members.user_id','users.id')
+                    ->selectRaw('members.*, users.name')
                     ->where('group_id',$id)
                     ->get();
         return view('pages.addPayment', compact('memberList'));
@@ -61,10 +64,11 @@ class PaymentController extends Controller
             $payment->save();
 
             // Invoice or Payment event occurs
-            event(new InvoiceHasCreatedEvent($payment));
+
+            // event(new InvoiceHasCreatedEvent($payment));
 
             // select all member in this group
-
+            
             foreach($request->selected_member as $sm){
                 $paymentStatus = new MemberPaymentStatus();
                 $paymentStatus->member_id = $sm;
@@ -74,7 +78,7 @@ class PaymentController extends Controller
                 $paymentStatus->save();
             }
 
-            return response()->json($payment, 201);
+            return response()->json($payment, 200);
         }
 
         $payment = new SetPayment();
@@ -84,11 +88,12 @@ class PaymentController extends Controller
         $payment->deadline = $request->get('deadline');
         $payment->save();
 
-        $setPayment = Member::where('group_id', $request->route('id'))->get();
+        $setPayment = Member::where('group_id', $request->route('id'))
+        ->get();
 
         foreach($setPayment as $sp){
             $paymentStatus = new MemberPaymentStatus();
-            $paymentStatus->member_id = $sp->user_id;
+            $paymentStatus->member_id = $sp->id;
             $paymentStatus->payment_id = $payment->id;
             $paymentStatus->status = 'belum_bayar';
             $paymentStatus->total = 0;
@@ -127,6 +132,43 @@ class PaymentController extends Controller
     public function paymentAdminView($id){
         // List tagihan beserta berapa orang yang bayar dibanding semua yang menerima kontrak tagihan
         $data['id'] = $id;
+
+        $data['payment'] = SetPayment::
+        where('set_payment.group_id',$id)
+        ->selectRaw('set_payment.id, nominal, deadline')
+        // ->orderBy('set_payment.id', 'desc')
+        ->get();
+        
+        $data['payment_status'] = null;
+        $i = 0;
+        foreach($data['payment'] as $payment){
+            $data['payment_status'][$i] = MemberPaymentStatus::
+            where('member_payment_status.payment_id',$payment -> id)
+            ->get();
+            $i++;
+        }
+        // $data['konten'] = SetPayment::
+        // join('member_payment_status','set_payment.id','member_payment_status.payment_id')
+        // ->selectRaw('nominal, deadline, count(member_payment_status.id)')
+        // ->where('group_id',$id)
+        // ->groupBy('set_payment.id')
+        // ->get();
+        $data['perbandingan_jumlah_tagihan'][] = null;
+        $i = 0;
+        foreach($data['payment_status'] as $paymentStatus){
+            $totalTagihan = 0;
+            $sudahBayar = 0;
+            foreach($paymentStatus as $ps){
+                if($ps->status != "belum_bayar"){
+                    $sudahBayar++;   
+                }
+                $totalTagihan++;
+            }
+            $data['perbandingan_jumlah_tagihan'][$i]['sudah_bayar'] = $sudahBayar;
+            $data['perbandingan_jumlah_tagihan'][$i]['total_tagihan'] = $totalTagihan;
+            $i++;
+        }
+        // return response()->json($data['payment_status'], 200);
         return view('pages.paymentAdmin', compact('data'));
     }
 }
