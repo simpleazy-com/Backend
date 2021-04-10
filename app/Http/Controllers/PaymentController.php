@@ -33,10 +33,9 @@ class PaymentController extends Controller
     }
 
     public function addPaymentView($id){
-        $memberList = DB::table('members')
-                    ->join('users', 'members.user_id','users.id')
-                    ->where('group_id',$id)
-                    ->get();
+        $memberList = Member::join('users', 'members.user_id', 'users.id')
+                    ->select('members.id', 'users.name')
+                    ->where('members.group_id', $id)->get();
 
         return view('pages.addPayment', compact('memberList'));
     }
@@ -67,7 +66,6 @@ class PaymentController extends Controller
 
             // Invoice or Payment event occurs
             InvoiceHasCreatedEvent::dispatch($payment);
-
             // select all member in this group
             foreach($request->selected_member as $sm){
                 $paymentStatus = new MemberPaymentStatus();
