@@ -185,7 +185,10 @@ class PaymentController extends Controller
             'member_id', $request->member_id,
             'status', $request->status
         ]);
-        
+        MemberPaymentStatus::join('set_payment','member_payment_status.payment_id','set_payment.id')
+        ->where('set_payment.index_row', $request->index_row)
+        ->where('member_payment_status.member_id', $request->member_id)
+        ->update(['status' => 'sudah_bayar']);
 
         $memberChangeAsPaid = DB::table('set_payment')
                                 ->join('member_payment_status', 'set_payment.id', 'member_payment_status.payment_id')
