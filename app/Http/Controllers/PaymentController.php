@@ -70,7 +70,7 @@ class PaymentController extends Controller
             $payment->save();
 
             // Invoice or Payment event occurs
-            InvoiceHasCreatedEvent::dispatch($payment);
+            // InvoiceHasCreatedEvent::dispatch($payment);
             // select all member in this group
             
             foreach($request->selected_member as $sm){
