@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Admin;
 use App\Member;
 use App\Group;
+use App\MemberPaymentStatus;
 
 use Auth;
 
@@ -152,7 +153,7 @@ class AdminController extends Controller
 
     public function kickMember(Request $request, $group_id){
         $validated = Validator::make($request->all(), [
-            'user_id' => 'required',
+            'user_id' => 'required'
         ]);
 
         if($validated->fails()){
@@ -160,9 +161,16 @@ class AdminController extends Controller
         }
 
         try{
+            $deletedPayment = MemberPaymentStatus::join('members', 'member_payment_status.member_id', 'members.id')
+            ->join('set_payment', 'member_payment_status.payment_id', 'set_payment.id')
+            ->where('members.user_id', $request->get('user_id'))
+            ->where('set_payment.group_id', $group_id)
+            ->delete();
+
             $kickedMember = Member::where('user_id', $request->get('user_id'))
             ->where('group_id', $group_id)
             ->delete();
+
         }catch(Exception $e){
             return response()->json($e, 400);
         }

@@ -23,8 +23,12 @@
             <a href="/group/{{ $group->id }}/member">Member</a>
             <a href="/group/{{ $group->id }}/info">Group Info</a>
             <a href="/group/{{ $group->id }}/payment">List Payment</a> <!--untuk lihat semua tagihan (belum bayar, tidak membayar, sudah dibayar)-->
-            <a href="/group/{{ $group->id }}/adminship">Adminship (khusus owner)</a>
-            <a href="/group/{{ $group->id }}/paymentadmin">Payment (khusus admin)</a>
+            @if($data['role'] == 2)
+            <a href="/group/{{ $group->id }}/adminship"> Adminship</a>
+            @endif
+            @if($data['role'] == 1 or $data['role'] == 2)
+            <a href="/group/{{ $group->id }}/paymentadmin">Organize Payment</a>
+            @endif
         </div>
     </div>
 </div>

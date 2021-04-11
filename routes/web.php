@@ -51,6 +51,7 @@ Route::middleware(['auth'])->group(function(){
 
     Route::get('/group/{id}/info', 'GroupController@infoView');
     Route::get('/group/{id}/payment','PaymentController@index');
+    Route::post('/group/{group_id}/member/kick', 'AdminController@kickMember');
 
     Route::middleware(['isAdmin'])->group(function(){
         // Owner and admin can change this route
@@ -73,13 +74,12 @@ Route::middleware(['auth'])->group(function(){
         
         // Statistic
         Route::get('/group/{id}/payment/status', 'PaymentController@graph');
-
+        
         Route::middleware(['isOwner'])->group(function(){
             Route::get('/group/{id}/adminship', 'AdminController@adminship');
             Route::get('/group/{id}/adminship/add', 'AdminController@addAdminshipView');
             Route::post('/group/{id}/adminship/add', 'AdminController@addAdminship')->middleware('checkAdmin');
             Route::post('/group/{id}/adminship/demote', 'AdminController@demoteAdminshipStatus');
-            Route::post('/group/{group_id}/member/kick', 'AdminController@kickMember');
         });
     });
 });

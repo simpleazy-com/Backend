@@ -82,7 +82,7 @@ class GroupController extends Controller
     }
 
     public function groupDetail($id){
-        $isAdmin;
+        $role;
         $verif = Admin::where('group_id', $id)
         ->join('groups','admins.group_id','groups.id')
         ->where('admins.user_id',Auth::user()->id)
@@ -96,19 +96,22 @@ class GroupController extends Controller
         try{
             if(!sizeof($verif) == 0){
                 $data['group'] = Group::find($verif[0]->id);
-                $isAdmin = true;
+                $role = 1;
+                if($verif[0] -> role == "owner"){
+                    $role = 2;
+                }
             }
             else if(!sizeof($verifMember) == 0){
                 $data['group'] = Group::find($verifMember[0]->id);
-                $isAdmin = false;
+                $role = 0;
             }else{
                 $data['group'] = "Access Probidden";
-                $isAdmin = false;
+                $role = 0;
             }
         }catch(ErrorException $e){
             echo $e;
         }
-
+        $data['role'] = $role;
         $data['payment'] = SetPayment::where('group_id', $id)->get();
 
         return view('pages.detailGroup',compact('data'));
@@ -148,6 +151,10 @@ class GroupController extends Controller
     }
 
     public function memberList($id){
+        $data['role'] = sizeof(Admin::where('user_id', Auth::user()->id)
+        ->where('group_id', $id)
+        ->get());
+
         $data['memberList'] = DB::table('members')
             ->join('users', 'members.user_id', 'users.id')
             ->select('users.id','users.name', 'members.isAdmin')
@@ -163,7 +170,9 @@ class GroupController extends Controller
             ->where('status','pending')
             ->get();
 
-        return view('pages.member', $data);
+        return 
+        // response()->json(compact('role'));
+        view('pages.member', $data);
     }
 
     public function infoView($id){
