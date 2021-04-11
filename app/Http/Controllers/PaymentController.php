@@ -6,9 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+use Maatwebsite\Excel\Facades\Excel;
+
 use App\Notifications\InvoiceHasCreatedNotification;
 use App\Events\InvoiceHasCreatedEvent;
 use App\Jobs\SendEmailReminder;
+use App\Exports\ReportPayment;
 
 
 use Auth;
@@ -70,7 +73,9 @@ class PaymentController extends Controller
             $payment->save();
 
             // Invoice or Payment event occurs
-            // InvoiceHasCreatedEvent::dispatch($payment);
+
+            event(new InvoiceHasCreatedEvent($payment));
+
             // select all member in this group
             
             foreach($request->selected_member as $sm){
@@ -126,14 +131,8 @@ class PaymentController extends Controller
     }    
 
     public function paymentList($id){
-        $listPayment = DB::table('set_payment')
-                    ->join('member_payment_status', 'set_payment.id', 'member_payment_status.payment_id')
-                    ->join('members', 'set_payment.group_id','members.group_id')
-                    ->select('members.user_id','set_payment.nominal', 'set_payment.index_row','member_payment_status.status', 'member_payment_status.id')
-                    ->where('set_payment.group_id', $id)
-                    ->get();
-                    
-        return response()->json($listPayment, 200); 
+        $data['listPayment'] = SetPayment::where('group_id', $id)->get();
+        return view('pages.exportReportPayment', $data);
     }
 
     public function paymentAdminView($id){
@@ -154,12 +153,7 @@ class PaymentController extends Controller
             ->get();
             $i++;
         }
-        // $data['konten'] = SetPayment::
-        // join('member_payment_status','set_payment.id','member_payment_status.payment_id')
-        // ->selectRaw('nominal, deadline, count(member_payment_status.id)')
-        // ->where('group_id',$id)
-        // ->groupBy('set_payment.id')
-        // ->get();
+
         $data['perbandingan_jumlah_tagihan'][] = null;
         $i = 0;
         foreach($data['payment_status'] as $paymentStatus){
@@ -197,6 +191,9 @@ class PaymentController extends Controller
                                 ->get();
         
         return back();
-        // dd($memberChangeAsPaid);
+    }
+
+    public function exportReportPayment($id, $payment_id){
+        return (new ReportPayment($id, $payment_id))->download('laporan-tagihan.xlsx');
     }
 }

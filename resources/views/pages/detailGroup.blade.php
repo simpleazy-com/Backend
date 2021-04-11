@@ -22,7 +22,7 @@
         <div class="group-detail-list-button">
             <a href="/group/{{ $group->id }}/member">Member</a>
             <a href="/group/{{ $group->id }}/info">Group Info</a>
-            <a href="/group/{{ $group->id }}/payment">List Payment</a> <!--untuk lihat semua tagihan (belum bayar, tidak membayar, sudah dibayar)-->
+            <a href="/group/{{ $group->id }}/payment/list">List Payment</a> <!--untuk export excel-->
             @if($data['role'] == 2)
             <a href="/group/{{ $group->id }}/adminship"> Adminship</a>
             @endif
