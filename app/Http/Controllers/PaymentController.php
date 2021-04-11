@@ -71,7 +71,7 @@ class PaymentController extends Controller
 
             // Invoice or Payment event occurs
 
-            // event(new InvoiceHasCreatedEvent($payment));
+            event(new InvoiceHasCreatedEvent($payment));
 
             // select all member in this group
             
