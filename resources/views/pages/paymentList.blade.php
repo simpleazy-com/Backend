@@ -7,7 +7,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">Member ID</th>
+                    <th scope="col">Name</th>
                     <th scope="col">Nominal</th>
                     <th scope="col">Status</th>
                     <th scope="col">Aksi</th>
@@ -18,8 +18,8 @@
             <form action="/group/{{ Request::route('id') }}/payment/{{ Request::route('payment_id') }}" method="POST">
                 <tr>
                 @csrf
-                    <td>{{ $lp->member_id }}</td>
-                    <td>{{ $lp->nominal }}</td>
+                    <td>{{ $lp->name }}</td>
+                    <td>Rp. {{ $lp->nominal }}</td>
                     <td>{{ $lp->status }}</td>
                     <input type="hidden" name="index_row" value="{{ $lp->index_row }}">
                     <input type="hidden" name="member_id" value="{{ $lp->member_id }}">

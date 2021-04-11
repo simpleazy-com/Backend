@@ -151,6 +151,10 @@ class GroupController extends Controller
     }
 
     public function memberList($id){
+        $data['role'] = sizeof(Admin::where('user_id', Auth::user()->id)
+        ->where('group_id', $id)
+        ->get());
+
         $data['memberList'] = DB::table('members')
             ->join('users', 'members.user_id', 'users.id')
             ->select('users.id','users.name', 'members.isAdmin')
@@ -166,7 +170,9 @@ class GroupController extends Controller
             ->where('status','pending')
             ->get();
 
-        return view('pages.member', $data);
+        return 
+        // response()->json(compact('role'));
+        view('pages.member', $data);
     }
 
     public function infoView($id){

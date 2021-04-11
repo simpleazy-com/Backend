@@ -10,7 +10,9 @@
                     <th scope="col">#</th>
                     <th scope="col">Name</th>
                     <th scope="col">Status</th>
+                    @if($role == 1)
                     <th scope="col">Aksi</th>
+                    @endif
                 </tr>
             </thead>
             <tbody>
@@ -20,6 +22,7 @@
                     <td>{{ $i }}</td>
                     <td>{{ $member->name }}</td>
                     <td>{{ $member->isAdmin ? 'Admin' : 'Member' }}</td>
+                    @if($role == 1)
                     <td>
                         <form method="post" action="/group/{{Request::route('id')}}/member/kick">
                         @csrf
@@ -27,6 +30,7 @@
                             <button class="btn btn-danger" type="submit">Kick</button>
                         </form>
                     </td>
+                    @endif
                 </tr>
                 <?php $i++ ?>
             @endforeach

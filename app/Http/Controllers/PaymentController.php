@@ -113,7 +113,9 @@ class PaymentController extends Controller
 
         $listPayment = DB::table('member_payment_status')
                     ->join('set_payment', 'member_payment_status.payment_id', 'set_payment.id')
-                    ->select('member_payment_status.member_id','set_payment.nominal', 'set_payment.index_row', 'member_payment_status.status','member_payment_status.id')
+                    ->join('members', 'member_payment_status.member_id', 'members.id')
+                    ->join('users', 'members.user_id', 'users.id')
+                    ->select('member_payment_status.member_id','set_payment.nominal', 'set_payment.index_row', 'member_payment_status.status','member_payment_status.id', 'users.name')
                     ->where('set_payment.group_id', $id)
                     ->where('member_payment_status.payment_id', $payment_id)
                     ->get();
@@ -195,6 +197,8 @@ class PaymentController extends Controller
                                 ->where('set_payment.index_row', $request->index_row)
                                 ->where('member_payment_status.member_id', $request->member_id)
                                 ->get();
-        dd($memberChangeAsPaid);
+        
+        return back();
+        // dd($memberChangeAsPaid);
     }
 }
