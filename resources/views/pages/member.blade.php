@@ -10,6 +10,7 @@
                     <th scope="col">#</th>
                     <th scope="col">Name</th>
                     <th scope="col">Status</th>
+                    <th scope="col">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -19,6 +20,13 @@
                     <td>{{ $i }}</td>
                     <td>{{ $member->name }}</td>
                     <td>{{ $member->isAdmin ? 'Admin' : 'Member' }}</td>
+                    <td>
+                        <form method="post" action="/group/{{Request::route('id')}}/member/kick">
+                        @csrf
+                            <input type="hidden" name="user_id" value="{{ $member -> id }}">
+                            <button class="btn btn-danger" type="submit">Kick</button>
+                        </form>
+                    </td>
                 </tr>
                 <?php $i++ ?>
             @endforeach

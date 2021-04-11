@@ -27,6 +27,7 @@ Route::get('/home', function(){
 Route::get('/redirect', 'Auth\LoginController@redirectToProvider');
 Route::get('/callback', 'Auth\LoginController@handleProviderCallback');
 
+Route::post('/group/{group_id}/member/kick', 'AdminController@kickMember');
 Route::middleware(['auth'])->group(function(){
 
     Route::get('/logout', function(){
@@ -79,7 +80,7 @@ Route::middleware(['auth'])->group(function(){
             Route::get('/group/{id}/adminship/add', 'AdminController@addAdminshipView');
             Route::post('/group/{id}/adminship/add', 'AdminController@addAdminship')->middleware('checkAdmin');
             Route::post('/group/{id}/adminship/demote', 'AdminController@demoteAdminshipStatus');
-            Route::post('/group/{group_id}/member/kick', 'AdminController@kickMember');
+            
         });
     });
 });
