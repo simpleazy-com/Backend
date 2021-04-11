@@ -50,7 +50,6 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/group/join', 'GroupController@join')->middleware(['isValidCode','groupMode']);
 
     Route::get('/group/{id}/info', 'GroupController@infoView');
-    Route::get('/group/{id}/payment','PaymentController@index');
     Route::post('/group/{group_id}/member/kick', 'AdminController@kickMember');
 
     Route::middleware(['isAdmin'])->group(function(){
@@ -68,7 +67,10 @@ Route::middleware(['auth'])->group(function(){
 
         Route::get('/group/{id}/payment/{payment_id}', 'PaymentController@checkUserPaymentStatus')->where('payment_id', '[0-9999999]+');
         Route::post('/group/{id}/payment/{payment_id}', 'PaymentController@changeAsPaidPayment');
+
         Route::get('/group/{id}/payment/list', 'PaymentController@paymentList');
+        Route::post('/group/{id}/payment/{payment_id}/report/export', 'PaymentController@exportReportPayment');
+
 
         Route::get('/group/{id}/paymentadmin','PaymentController@paymentAdminView');
         
