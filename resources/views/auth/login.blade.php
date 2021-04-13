@@ -3,101 +3,110 @@
 @section('content')
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@500&display=swap');
 
 *{
-  color: white;
-  font-family: 'Fira Code', monospace;
+    padding: 0;
+    margin: 0;
 }
-body{
-  background-color: #1B1B32;
-}
+
 .card{
-    background-color:indigo;
-    color: white;
+    width: 30%;
+    margin: 50px auto;
 }
-.card-header{
-  background-color: indigo;
+
+.login-option{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
-.card-body{
-  background-color: purple;
+
+.option-text{
+    font-size: 14px;
 }
-button{
-  background-color: #6574cd;
-  color: white;
+
+.option-google{
+    text-decoration: none;
+    color: black;
+}
+
+.user{
+    display: block;
+    float: right;
+}
+
+.container{
+    margin-top: 50px;
+}
+
+.box{
+    height: 150px;
+}
+@media (max-width: 800px) {
+    .card{
+        width: 80%;
+        margin: 50px auto;
+    }
 }
 </style>
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card" >
-                <div class="card-header" ><img src="https://res.cloudinary.com/codelifings/image/upload/v1596531968/ice-cream_tv7wto.png" class="img" style="width:50px;height:50px" alt="..."> Sign In
+<div class="card">
+        <div class="card-header text-center">
+            <h3>Login</h3>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ route('login') }}">
+            @csrf
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">
+                          <i class="fas fa-envelope-square"></i>
+                      </span>
+                    </div>
+                    <input type="text" class="form-control @error('email') is-invalid @enderror" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                    @error('email')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
                 </div>
-
-                <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
-
-                        <div class="form-group row">
-                            <label for="email" style="color:white" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="password" style="color:white" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-md-6 offset-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                                    <label style="color:white" class="form-check-label" for="remember">
-                                        {{ __('Remember Me') }}
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Log in') }}
-                                </button>
-
-                                @if (Route::has('password.request'))
-                                    <a class="btn btn-danger" style="color:white;font-size:13pt" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
-                                    </a>
-                                @endif
-
-                                <a class="nav-link " href="{{ route('register') }}">{{ __('Belum punya akun? Daftar disini') }}</a>
-                                <a class="nav-link " href="/redirect">{{ __('Google') }}</a>
-                            </div>
-                        </div>
-                    </form>
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">
+                          <i class="fa fa-key"></i>
+                        </span>
+                    </div>
+                    <input type="password" class="form-control @error('password') is-invalid @enderror" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Password" name="password" required autocomplete="current-password">
+                    @error('password')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
                 </div>
-            </div>
+                <div>
+                    <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                    <label for="remember">Remember me!</label>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </div>
+                <div class="login-option">
+                    <div>
+                        @if (Route::has('password.request'))
+                            <a href="{{ route('password.request') }}">
+                                <p class="option-text">{{ __('Forgot Your Password?') }}</p>
+                            </a>
+                        @endif
+                    </div>
+                    <div>
+                        <p class="option-text">New to simpleazy? <a href="/register">Create an account here!</a></p>
+                    </div>
+                    <div>
+                        <p class="option-text">Or Login with</p>
+                    </div>
+                    <div>
+                        <a href="/redirect" class="option-google"><i class="fab fa-google"></i></a>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-</div>
 @endsection

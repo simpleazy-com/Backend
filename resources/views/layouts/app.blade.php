@@ -37,12 +37,15 @@
             <li class="nav-item">
                 <a class="nav-link disabled" href="/dashboard">Setting</a>
             </li>
+            @if(Auth::check())
             <li class="nav-item">
               <a href="/logout" class="nav-link">Logout</a>
-          </li>
+            </li>
+            @endif
         </ul>
         </div>
     </nav>
     @yield('content')
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 </body>
 </html>

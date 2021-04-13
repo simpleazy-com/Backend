@@ -2,105 +2,119 @@
 
 @section('content')
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@500&display=swap');
-
 *{
-  color: white;
-  font-family: 'Fira Code', monospace;
+    padding: 0;
+    margin: 0;
 }
-body{
-  background-color: #1B1B32;
-}
+
 .card{
-    background-color:indigo;
-    color: white;
+    width: 30%;
+    margin: 50px auto;
 }
-.card-header{
-  background-color: indigo;
+
+.login-option{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
-.card-body{
-  background-color: purple;
+
+.option-text{
+    font-size: 14px;
 }
-button{
-  background-color: #6574cd;
-  color: white;
+
+.option-google{
+    text-decoration: none;
+    color: black;
+}
+
+.user{
+    display: block;
+    float: right;
+}
+
+.container{
+    margin-top: 50px;
+}
+
+.box{
+    height: 150px;
+}
+@media (max-width: 800px) {
+    .card{
+        width: 80%;
+        margin: 50px auto;
+    }
 }
 </style>
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header" ><img src="https://res.cloudinary.com/codelifings/image/upload/v1596531968/ice-cream_tv7wto.png" class="img" style="width:50px;height:50px" alt="..."> Sign Up
+<div class="card">
+        <div class="card-header text-center">
+            <h3>Register</h3>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ route('register') }}">
+            @csrf
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">
+                            <i class="fas fa-user"></i>
+                        </span>
+                    </div>
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Name" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+                    @error('name')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
                 </div>
-
-                <div class="card-body" style="color:white">
-                    <form method="POST" action="{{ route('register') }}">
-                        @csrf
-
-                        <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-
-                                @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Register') }}
-                                </button>
-                                <a class="btn btn-danger" href="{{ route('login') }}">
-                                    {{ __('Sudah punya akun?') }}
-                                </a>
-                            </div>
-                        </div>
-                    </form>
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">
+                          <i class="fas fa-envelope-square"></i>
+                      </span>
+                    </div>
+                    <input type="text" class="form-control @error('email') is-invalid @enderror" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Email" name="email" value="{{ old('email') }}" required autocomplete="email">
+                    @error('email')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                   @enderror
                 </div>
-            </div>
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">
+                          <i class="fa fa-key"></i>
+                        </span>
+                    </div>
+                    <input type="password" class="form-control @error('password') is-invalid @enderror" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Password" name="password" required autocomplete="new-password">
+                    @error('password')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">
+                        <i class="fas fa-check"></i>
+                      </span>
+                    </div>
+                    <input type="password" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Confirm Password" name="password_confirmation" required autocomplete="new-password">
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <button type="submit" class="btn btn-primary btn-block">Register</button>
+                </div>
+                <div class="login-option">
+                    <div>
+                        <p class="option-text">Already have an account? <a href="{{ route('login') }}">Login here!</a></p>
+                    </div>
+                    <div>
+                        <p class="option-text">Or Register with</p>
+                    </div>
+                    <div>
+                        <a href="/redirect" class="option-google"><i class="fab fa-google"></i></a>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-</div>
 @endsection

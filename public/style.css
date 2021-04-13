@@ -10,7 +10,7 @@ body{
     border-radius: 10px;
 }
 nav.navbar.navbar-expand-lg{
-    background-color: rgb(235, 92, 112);
+    background-color: #0275d8;
 }
 .navbar div ul li a, .navbar a{
     color: #fff !important;
