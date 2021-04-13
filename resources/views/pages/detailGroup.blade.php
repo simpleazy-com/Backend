@@ -22,11 +22,12 @@
         <div class="group-detail-list-button">
             <a href="/group/{{ $group->id }}/member">Member</a>
             <a href="/group/{{ $group->id }}/info">Group Info</a>
-            <a href="/group/{{ $group->id }}/payment/list">List Payment</a> <!--untuk export excel-->
+            <a href="/group/{{ $group->id }}/payment/list">List Payment</a> 
             @if($data['role'] == 2)
             <a href="/group/{{ $group->id }}/adminship"> Adminship</a>
             @endif
             @if($data['role'] == 1 or $data['role'] == 2)
+            <a href="/group/{{ $group->id }}/payment/list/report">Export Payment Report</a> <!--untuk export excel-->
             <a href="/group/{{ $group->id }}/paymentadmin">Organize Payment</a>
             @endif
         </div>

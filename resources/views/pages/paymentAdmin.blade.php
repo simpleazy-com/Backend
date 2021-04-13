@@ -12,7 +12,7 @@
             <form action="" method="post">
                 <button class="btn btn-danger float-right" type="submit">Hapus</button>
             </form>
-            <h1><a href="" class="putih">Rp. {{ $payment -> nominal }} ({{ $data['perbandingan_jumlah_tagihan'][$i]['sudah_bayar'] }}/{{ $data['perbandingan_jumlah_tagihan'][$i]['total_tagihan'] }})</a></h1>
+            <h1><a href="/group/{{ $data['id'] }}/payment/{{ $payment ->id }}" class="putih">Rp. {{ $payment -> nominal }} ({{ $data['perbandingan_jumlah_tagihan'][$i]['sudah_bayar'] }}/{{ $data['perbandingan_jumlah_tagihan'][$i]['total_tagihan'] }})</a></h1>
             <p>Batas Waktu : {{ $payment -> deadline }}</p>
         </div>
         <?php $i++?>

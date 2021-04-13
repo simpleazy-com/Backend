@@ -39,13 +39,11 @@ class PaymentController extends Controller
     }
 
     public function addPaymentView($id){
-
         $memberList = DB::table('members')
                     ->join('users', 'members.user_id','users.id')
                     ->selectRaw('members.*, users.name')
                     ->where('group_id',$id)
                     ->get();
-
 
         return view('pages.addPayment', compact('memberList'));
     }
