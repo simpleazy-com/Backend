@@ -9,7 +9,9 @@
     <?php $i = 0?>
     @foreach($data['payment'] as $payment)
         <div class="group-detail-payment-payment">
-            <form action="" method="post">
+            <form action="/group/{{ $data['id'] }}/paymentadmin/delete" method="post">
+            @csrf
+                <input type="hidden" name="payment_id" value="{{ $payment -> id }}">
                 <button class="btn btn-danger float-right" type="submit">Hapus</button>
             </form>
             <h1><a href="/group/{{ $data['id'] }}/payment/{{ $payment ->id }}" class="putih">Rp. {{ $payment -> nominal }} ({{ $data['perbandingan_jumlah_tagihan'][$i]['sudah_bayar'] }}/{{ $data['perbandingan_jumlah_tagihan'][$i]['total_tagihan'] }})</a></h1>

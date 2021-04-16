@@ -36,6 +36,8 @@ Route::middleware(['auth'])->group(function(){
 
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
     Route::get('/profile', 'ProfileController@profile');
+    Route::get('/profile/edit', 'ProfileController@editProfileView');
+    Route::post('/profile/edit', 'ProfileController@editProfile');
 
     Route::get('/mail', 'MailController@mailer'); //Kosong keneh gan
 
@@ -52,6 +54,8 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/group/{id}/info', 'GroupController@infoView');
     Route::post('/group/{group_id}/member/kick', 'AdminController@kickMember');
     Route::get('/group/{id}/payment/list', 'PaymentController@index');
+
+    Route::post('/group/leave','GroupController@leaveGroup');
 
     Route::middleware(['isAdmin'])->group(function(){
         // Owner and admin can change this route
@@ -74,6 +78,7 @@ Route::middleware(['auth'])->group(function(){
 
 
         Route::get('/group/{id}/paymentadmin','PaymentController@paymentAdminView');
+        Route::post('/group/{id}/paymentadmin/delete','PaymentController@deletePayment');
         
         // Statistic
         Route::get('/group/{id}/payment/status', 'PaymentController@graph');
