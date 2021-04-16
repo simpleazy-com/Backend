@@ -55,6 +55,8 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/group/{group_id}/member/kick', 'AdminController@kickMember');
     Route::get('/group/{id}/payment/list', 'PaymentController@index');
 
+    Route::post('/group/leave','GroupController@leaveGroup');
+
     Route::middleware(['isAdmin'])->group(function(){
         // Owner and admin can change this route
         Route::get('/group/{id}/settings', 'AdminController@settingsView');

@@ -12,6 +12,7 @@ use App\Admin;
 use App\Member;
 use App\SetPayment;
 use App\Log;
+use App\MemberPaymentStatus;
 use Auth;
 
 class GroupController extends Controller
@@ -197,8 +198,16 @@ class GroupController extends Controller
 
         // query memanggil data owner dari group
         $data['owner'] = Admin::where('admins.group_id', $id)
+        ->where('role', 'owner')
         ->join('users','admins.user_id','users.id')
-        ->selectRaw('name')
+        ->selectRaw('name, user_id')
+        ->get();
+
+        $data['isAdmin'] = Admin::where('admins.group_id', $id)
+        ->where('role', 'admin')
+        ->where('admins.user_id', Auth::id())
+        ->join('users','admins.user_id','users.id')
+        ->selectRaw('name, user_id')
         ->get();
 
         // validasi apakah data group kosong atau tidak
@@ -211,6 +220,24 @@ class GroupController extends Controller
         }catch(ErrorException $e){
             return redirect('/group');
         }
-        // return response()->json($data, 200);
+        // return response()->json(sizeof($data['isAdmin']), 200);
+    }
+
+    public function leaveGroup(Request $request){
+        if($request -> isAdmin == "true"){
+            Admin::where('admins.user_id', $request -> user_id)
+            ->where('admins.group_id', $request -> group_id)
+            ->delete();
+        }
+        MemberPaymentStatus::join('members', 'member_payment_status.member_id', 'members.id')
+        ->where('members.user_id',$request -> user_id)
+        ->where('members.group_id', $request -> group_id)
+        ->delete();
+        
+        Member::where('members.user_id',$request -> user_id)
+        ->where('members.group_id', $request -> group_id)
+        ->delete();
+
+        return redirect('/group');
     }
 }
