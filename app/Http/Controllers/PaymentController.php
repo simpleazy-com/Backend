@@ -198,4 +198,16 @@ class PaymentController extends Controller
     public function exportReportPayment($id, $payment_id){
         return (new ReportPayment($id, $payment_id))->download('laporan-tagihan.xlsx');
     }
+
+    public function deletePayment($id, Request $request){
+        MemberPaymentStatus::join('set_payment', 'member_payment_status.payment_id', 'set_payment.id')
+        ->where('set_payment.group_id', $id)
+        ->where('member_payment_status.payment_id', $request -> payment_id)
+        ->delete();
+
+        SetPayment::where('set_payment.id', $request->payment_id)
+        ->delete();
+
+        return back();
+    }
 }

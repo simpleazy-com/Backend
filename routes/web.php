@@ -74,6 +74,7 @@ Route::middleware(['auth'])->group(function(){
 
 
         Route::get('/group/{id}/paymentadmin','PaymentController@paymentAdminView');
+        Route::post('/group/{id}/paymentadmin/delete','PaymentController@deletePayment');
         
         // Statistic
         Route::get('/group/{id}/payment/status', 'PaymentController@graph');
