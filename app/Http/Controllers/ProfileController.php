@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use Auth;
+use App\User;
 
 class ProfileController extends Controller
 {
@@ -16,10 +17,16 @@ class ProfileController extends Controller
     }
 
     public function editProfileView(){
-        // Under Contruction
+        $data = User::where('id', Auth::id())->get();
+        return view('pages.editProfile', compact('data'));
     }
 
-    public function editProfile(){
-        
+    public function editProfile(Request $request){
+        User::where('id', $request -> id)
+        ->update(
+            ['name' => $request -> name],
+            ['email' => $request -> email]
+        );
+        return redirect('/profile');
     }
 }

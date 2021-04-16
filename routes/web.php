@@ -36,6 +36,8 @@ Route::middleware(['auth'])->group(function(){
 
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
     Route::get('/profile', 'ProfileController@profile');
+    Route::get('/profile/edit', 'ProfileController@editProfileView');
+    Route::post('/profile/edit', 'ProfileController@editProfile');
 
     Route::get('/mail', 'MailController@mailer'); //Kosong keneh gan
 
