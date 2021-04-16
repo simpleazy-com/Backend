@@ -87,7 +87,7 @@ class PaymentController extends Controller
                 $paymentStatus->save();
             }
 
-            return response()->json($payment, 200);
+            return redirect('/group/'.$request->route('id').'/payment/add');
         }
 
         $payment = new SetPayment();
@@ -145,7 +145,7 @@ class PaymentController extends Controller
         // ->orderBy('set_payment.id', 'desc')
         ->get();
         
-        $data['payment_status'] = null;
+        $data['payment_status'] = [];
         $i = 0;
         foreach($data['payment'] as $payment){
             $data['payment_status'][$i] = MemberPaymentStatus::
@@ -156,18 +156,20 @@ class PaymentController extends Controller
 
         $data['perbandingan_jumlah_tagihan'][] = null;
         $i = 0;
-        foreach($data['payment_status'] as $paymentStatus){
-            $totalTagihan = 0;
-            $sudahBayar = 0;
-            foreach($paymentStatus as $ps){
-                if($ps->status != "belum_bayar"){
-                    $sudahBayar++;   
+        if(sizeof($data['payment_status']) != 0){
+            foreach($data['payment_status'] as $paymentStatus){
+                $totalTagihan = 0;
+                $sudahBayar = 0;
+                foreach($paymentStatus as $ps){
+                    if($ps->status != "belum_bayar"){
+                        $sudahBayar++;   
+                    }
+                    $totalTagihan++;
                 }
-                $totalTagihan++;
+                $data['perbandingan_jumlah_tagihan'][$i]['sudah_bayar'] = $sudahBayar;
+                $data['perbandingan_jumlah_tagihan'][$i]['total_tagihan'] = $totalTagihan;
+                $i++;
             }
-            $data['perbandingan_jumlah_tagihan'][$i]['sudah_bayar'] = $sudahBayar;
-            $data['perbandingan_jumlah_tagihan'][$i]['total_tagihan'] = $totalTagihan;
-            $i++;
         }
         // return response()->json($data['payment_status'], 200);
         return view('pages.paymentAdmin', compact('data'));
