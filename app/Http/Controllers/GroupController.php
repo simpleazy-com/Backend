@@ -230,15 +230,19 @@ class GroupController extends Controller
             ->delete();
         }
         if($request -> isAdmin == "owner"){
-            Group::where('groups.id', $request -> group_id)
-            ->delete();
-
             MemberPaymentStatus::join('members', 'member_payment_status.member_id', 'members.id')
             ->where('members.group_id', $request -> group_id)
             ->delete();
             
             Member::where('members.group_id', $request -> group_id)
             ->delete();
+
+            Admin::where('admins.group_id', $request -> group_id)
+            ->delete();
+
+            Group::where('groups.id', $request -> group_id)
+            ->delete();
+            
         }else{
             MemberPaymentStatus::join('members', 'member_payment_status.member_id', 'members.id')
             ->where('members.user_id',$request -> user_id)
