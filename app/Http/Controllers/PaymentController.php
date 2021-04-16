@@ -87,7 +87,7 @@ class PaymentController extends Controller
                 $paymentStatus->save();
             }
 
-            return redirect('/group/'.$request->route('id').'/payment/add');
+            return redirect('/group/'.$request->route('id').'/paymentadmin');
         }
 
         $payment = new SetPayment();
@@ -109,7 +109,7 @@ class PaymentController extends Controller
             $paymentStatus->save();
         }
 
-        return response()->json($payment, 201);
+        return redirect('/group/'.$request->route('id').'/paymentadmin');
     }
 
     public function checkUserPaymentStatus($id, $payment_id){

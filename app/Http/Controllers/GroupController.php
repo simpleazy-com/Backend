@@ -36,6 +36,7 @@ class GroupController extends Controller
         ->join('groups', 'admins.group_id', 'groups.id')
         ->join('members','groups.id','members.group_id')
         ->where('members.user_id', Auth::id())
+        ->where('members.status', 'accepted')
         ->selectRaw('*, users.name as owner_name')
         ->where('admins.role','owner')
         ->get();
