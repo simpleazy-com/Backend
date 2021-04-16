@@ -224,20 +224,24 @@ class GroupController extends Controller
     }
 
     public function leaveGroup(Request $request){
-        if($request -> isAdmin == "true"){
+        if($request -> isAdmin == "admin" || $request -> isAdmin == "owner"){
             Admin::where('admins.user_id', $request -> user_id)
             ->where('admins.group_id', $request -> group_id)
             ->delete();
         }
-        MemberPaymentStatus::join('members', 'member_payment_status.member_id', 'members.id')
-        ->where('members.user_id',$request -> user_id)
-        ->where('members.group_id', $request -> group_id)
-        ->delete();
-        
-        Member::where('members.user_id',$request -> user_id)
-        ->where('members.group_id', $request -> group_id)
-        ->delete();
-
+        if($request -> isAdmin == "owner"){
+            Group::where('groups.id', $request -> group_id)
+            ->delete();
+        }else{
+            MemberPaymentStatus::join('members', 'member_payment_status.member_id', 'members.id')
+            ->where('members.user_id',$request -> user_id)
+            ->where('members.group_id', $request -> group_id)
+            ->delete();
+            
+            Member::where('members.user_id',$request -> user_id)
+            ->where('members.group_id', $request -> group_id)
+            ->delete();
+        }
         return redirect('/group');
     }
 }

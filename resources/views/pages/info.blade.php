@@ -18,12 +18,20 @@
         @else
             <form action="/group/leave" method="post">
             @csrf
-                <input type="hidden" name="isAdmin" value="true">
+                <input type="hidden" name="isAdmin" value="admin">
                 <input type="hidden" name="group_id" value="{{ $data['group'][0] -> id }}">
                 <input type="hidden" name="user_id" value="{{ Auth::id() }}">
                 <button type="submit" class="btn btn-danger">Keluar Dari Group</button>
             </form>
         @endif
+    @else
+        <form action="/group/leave" method="post">
+        @csrf
+            <input type="hidden" name="isAdmin" value="owner">
+            <input type="hidden" name="group_id" value="{{ $data['group'][0] -> id }}">
+            <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+            <button type="submit" class="btn btn-danger">Hapus Group</button>
+        </form>
     @endif
 </div>
 @endsection
