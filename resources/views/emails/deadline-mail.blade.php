@@ -1,10 +1,11 @@
 @component('mail::message')
-# Introduction
+# Reminder from {{ $group_name }}
 
-The body of your message.
+Please pay cash before deadline <br>
+Deadline: {{ $deadline }}
 
 @component('mail::button', ['url' => ''])
-Button Text
+Click Here
 @endcomponent
 
 Thanks,<br>

@@ -1,30 +1,40 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col"><h4>Admins</h4></div>
-        <div class="col"><a href="/group/{{ $data['group_id'] }}/adminship/add" style="float:right;"><button class="btn btn-primary">Tambah Admin</button></a></div>
+<div class="konten member-konten">
+    <div class="container member-kontener">
+        <!-- Khusus Admin / Owner-->
+        <h5>Admin
+            <a href="/group/{{ $data['group_id'] }}/adminship/add" class="putih float-right">
+                <span class="fa fa-plus-square"></span>
+            </a>
+        </h5>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php $i = 1 ?>
+            @foreach($data['users'] as $user)
+                <tr>
+                    <th scope="row">{{ $i }}</th>
+                    <td>{{ $user -> name }}</td>
+                    <td>
+                        <form action="/group/{{ $data['group_id'] }}/adminship/demote" method="post">
+                            @csrf
+                            <input type="hidden" value="{{ $user -> user_id }}" name="user_id">
+                            <button class="btn btn-danger" type="submit">Demote</button>
+                        </form>
+                    </td>
+                </tr>
+                <?php $i++ ?>
+            @endforeach
+            </tbody>
+        </table>
     </div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php $i = 1 ?>
-        @foreach($data['users'] as $user)
-            <tr>
-                <th scope="row">{{ $i }} </th>
-                <td>{{ $user->name }} </td>
-                <td><a href="/group/{{ $data['group_id'] }}/adminship/{{ $user->user_id }}/demote"><button class="btn btn-danger" style="float:right;">Demote</button></a></td>
-            </tr>
-            <?php $i++ ?>
-        @endforeach
-        </tbody>
-    </table>
 </div>
 @endsection

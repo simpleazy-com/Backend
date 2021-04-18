@@ -2,71 +2,82 @@
 
 @section('content')
 <style>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@500&display=swap');
-
 *{
-  color: white;
-  font-family: 'Fira Code', monospace;
+    padding: 0;
+    margin: 0;
 }
-body{
-  background-color: #1B1B32;
-}
-.card{
-    background-color:indigo;
-    color: white;
-}
-.card-header{
-  background-color: indigo;
-}
-.card-body{
-  background-color: purple;
-}
-button{
-  background-color: #6574cd;
-  color: white;
-}</style></style>
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header" style="background: indigo;color:white">{{ __('Reset Password') }}</div>
 
-                <div class="card-body" style="background: purple;color: white">
-                    @if (session('status'))
+.card{
+    width: 30%;
+    margin: 50px auto;
+}
+
+.login-option{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.option-text{
+    font-size: 14px;
+}
+
+.option-google{
+    text-decoration: none;
+    color: black;
+}
+
+.user{
+    display: block;
+    float: right;
+}
+
+.container{
+    margin-top: 50px;
+}
+
+.box{
+    height: 150px;
+}
+@media (max-width: 800px) {
+    .card{
+        width: 80%;
+        margin: 50px auto;
+    }
+}
+}</style>
+    <div class="card">
+        <div class="card-header text-center">
+            <h3>Forgot Password</h3>
+        </div>
+        <div class="card-body">
+             @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
                         </div>
-                    @endif
+            @endif
 
-                    <form method="POST" action="{{ route('password.email') }}">
-                        @csrf
-
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button style="background: indigo;color:white" type="submit" class="btn btn-primary">
-                                    {{ __('Send Password Reset Link') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+            <form method="POST" action="{{ route('password.email') }}">
+                @csrf
+                 <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">
+                          <i class="fa fa-envelope-square"></i>
+                        </span>
+                    </div>
+                    <input type="email" class="form-control @error('email') is-invalid @enderror" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                     @error('email')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
                 </div>
-            </div>
+                <div class="input-group input-group-sm mb-3">
+                    <button type="submit" class="btn btn-primary">
+                                    {{ __('Send Password Reset Link') }}
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-</div>
 @endsection

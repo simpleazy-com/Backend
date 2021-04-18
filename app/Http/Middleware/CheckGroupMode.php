@@ -29,18 +29,20 @@ class CheckGroupMode
 
         $group = Group::where('code', $code)->first();
         
-        if($group == null){
+        if(empty($group)){
             return response()->json(['Invalid room code'], 400);
         }
+
+        $ownerOfGroup = Admin::where('user_id', Auth::user()->id)->where('group_id', $group->id)->where('role', 'owner')->first();
         
-        if(Admin::where('user_id', Auth::user()->id)->where('group_id', $group->id)->where('role', 'owner')->orWhere('role','admin')->first()){
-           return response()->json(['Redirecting to your room'], 400); 
+        if($ownerOfGroup){
+           return redirect()->route('/group/{id}', ['id' => $group->id]); 
         }
         
         
         if($group->mode == 'invite only'){
-
-            if(Member::where('user_id', Auth::user()->id)->where('status','pending')->first()){
+            $pendingMember = Member::where('user_id', Auth::user()->id)->where('status','pending')->first();
+            if($pendingMember){
                 return response()->json(['message' => 'Wait admin to response your request'], 400);
             }
             
