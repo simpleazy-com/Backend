@@ -19,7 +19,7 @@ class IsValidCode
     {
         $code = $request->get('code');
         if(! Group::where('code', $code) ){
-            return response()->json(['Invalid Code'], 400);
+            return redirect(APP_URL.'/group');
         }
         
         return $next($request);

@@ -2,6 +2,11 @@
 
 @section('content')
 <div class="konten group-form-content">
+    @if(Session::has('errors'))
+    <div class="alert alert-danger mt-4">
+        <p>{{ $errors }}</p>
+    </div>
+    @endif
     <div class="group-form-flex p-3">
         <form action="/group/join" method="post">
         @csrf

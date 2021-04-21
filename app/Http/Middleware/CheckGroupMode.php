@@ -22,7 +22,7 @@ class CheckGroupMode
         ]);
 
         if($validated->fails()){
-            return response()->json($validated->errors(), 400);
+            return back()->with('errors', 'Code must be filled');
         }
 
         $code = $request->get('code');
@@ -30,7 +30,7 @@ class CheckGroupMode
         $group = Group::where('code', $code)->first();
         
         if(empty($group)){
-            return response()->json(['Invalid room code'], 400);
+            return back()->with('errors', 'Invalid Code');
         }
 
         $ownerOfGroup = Admin::where('user_id', Auth::user()->id)->where('group_id', $group->id)->where('role', 'owner')->first();

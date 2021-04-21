@@ -22,6 +22,7 @@
       
         <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
           <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            @if(Auth::check())
             <li class="nav-item">
               <a class="nav-link" href="/dashboard">Home</a>
             </li>
@@ -37,7 +38,6 @@
             <li class="nav-item">
                 <a class="nav-link disabled" href="/dashboard">Setting</a>
             </li>
-            @if(Auth::check())
             <li class="nav-item">
               <a href="/logout" class="nav-link">Logout</a>
             </li>

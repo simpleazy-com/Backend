@@ -2,6 +2,11 @@
 
 @section('content')
 <div class="konten member-konten">
+    @if(Session::has('success'))
+    <div class="alert alert-success mt-4">
+        {{ session('success') }}
+    </div>
+    @endif
     <div class="container member-kontener">
         <h4>Member</h4>
         <table class="table">

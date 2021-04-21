@@ -29,7 +29,7 @@ class AdminController extends Controller
         ]);
 
         if($validated->fails()){
-            return response()->json($validated->errors(), 400);
+            return back()->withInput()->with('errors', $validated->errors());
         }
 
         $getId = $request->route('id');
@@ -40,7 +40,7 @@ class AdminController extends Controller
         $group->mode = $request->get('mode');
         $group->save();
 
-        return response()->json(compact('group'), 201);
+        return redirect()->back()->with('success', 'Setting has changed!');
     }
 
     public function userInPending($id){
@@ -157,7 +157,7 @@ class AdminController extends Controller
         ]);
 
         if($validated->fails()){
-            return response()->json($validated->errors(), 400);
+            return back()->with('error', 'Failed to kick member');
         }
 
         try{
@@ -175,7 +175,7 @@ class AdminController extends Controller
             return response()->json($e, 400);
         }
         
-        return back();
+        return back()->with('success', 'Member kicked!');
     }
 
 }

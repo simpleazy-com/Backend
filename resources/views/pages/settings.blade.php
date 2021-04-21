@@ -3,6 +3,20 @@
 @section('content')
 <div class="konten group-form-content">
     <div class="group-form-flex p-3">
+        @if(Session::has('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+        @endif
+        @if(Session::has('errors'))
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
         <form action="/group/{{$group->id}}/settings" method="post">
             @csrf
             <div class="form-group">

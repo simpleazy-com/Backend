@@ -2,6 +2,16 @@
 
 @section('content')
 <div class="konten group-form-content">
+    
+    @if(Session::has('errors'))
+    <div class="alert alert-danger mt-4">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
     <div class="group-form-flex p-3">
         <form action="/group/create" method="post">
             @csrf

@@ -2,6 +2,11 @@
 
 @section('content')
 <div class="konten">
+    @if(Session::has('success'))
+    <div class="alert alert-success mt-4">
+      <p>{{ session('success') }}</p>
+    </div>
+    @endif
     <div class="group-detail-admin-payment-button">
         <a href="/group/{{ $data['id'] }}/payment/add" class="putih"><span class="fa fa-plus-square"></span> Tambah Tagihan</a>
     </div>

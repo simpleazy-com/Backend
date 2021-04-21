@@ -2,12 +2,21 @@
 
 @section('content')
 <div class="konten">
-    <div class="group-form-flex p-3">
+    @if(Session::has('errors'))
+    <div class="alert alert-danger mt-4">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
         <form action="/group/{{Request::route('id')}}/payment/add" method="post">
         @csrf
             <div class="form-group">
                 <label for="inputnominal">Nominal</label>
-                <input type="number" name="nominal" id="inputnominal" class="form-control" placeholder="e.g : 100000">
+                <input type="number" name="nominal" id="inputnominal" class="form-control" placeholder="e.g : 100000" value="{{ old('nominal') }}">
             </div>
             <div class="form-group">
                 <label for="checkboxes">Pilih member</label>
@@ -21,7 +30,7 @@
             </div>
             <div class="form-group">
                 <label for="inputdeadline">Deadline</label>
-                <input type="date" name="deadline" id="inputdeadline" class="form-control">
+                <input type="date" name="deadline" id="inputdeadline" class="form-control" value="{{ old('deadline') }}">
             </div>
             <div class="profile-button">
                 <button type="submit" class="btn">Buat</button>

@@ -26,13 +26,6 @@ class GroupController extends Controller
         ->where('role', 'owner')
         ->get();
 
-        // $data['joined'] = Member::where('members.user_id', Auth::id())
-        // ->join('users', 'members.user_id','users.id')
-        // ->join('admins', 'users.id', 'admins.user_id')
-        // ->where('admins.role', 'owner')
-        // ->join('groups','members.group_id','groups.id')
-        // ->get();
-
         $data['joined'] = Admin::join('users','admins.user_id','users.id')
         ->join('groups', 'admins.group_id', 'groups.id')
         ->join('members','groups.id','members.group_id')
@@ -44,8 +37,6 @@ class GroupController extends Controller
 
         return 
         view('pages.group', compact('data'));
-        // response()->json(compact('data'), 200);
-        // json_decode($data['joined']);
     }
 
     public function createView(){
@@ -57,11 +48,11 @@ class GroupController extends Controller
         $validated = Validator::make($request->all(), [
             'name' => 'string|required|max:50',
             'description' => 'string|required|max:100',
-            'mode' => 'string'
+            'mode' => 'string|required'
         ]);
 
         if($validated->fails()){
-            return response()->json($validated->errors(), 400);
+            return back()->withInput()->with('errors', $validated->errors());
         }
 
         $group = new Group();
@@ -78,8 +69,7 @@ class GroupController extends Controller
         $owner->save();
 
         return 
-        redirect('/group');
-        // response()->json(compact('group','owner'), 201);
+        redirect('/group')->with('success', 'Group has created successfully!');
         
     }
 
@@ -131,7 +121,6 @@ class GroupController extends Controller
         if(Member::where('user_id', Auth::user()->id)->where('group_id', $group->id)->first()){
             return 
             redirect('/group');
-            // response()->json(['Already Joined'], 400);
         }
 
         try{
@@ -143,12 +132,10 @@ class GroupController extends Controller
         }catch(Exception $e){
             return 
             redirect('/group');
-            // response()->json($e->errors(), 400);
         }
 
         return 
-        redirect('/group');
-        // response()->json(compact('group','member'), 201);
+        redirect('/group')->with('success', 'Group joined successfully!');
 
     }
 

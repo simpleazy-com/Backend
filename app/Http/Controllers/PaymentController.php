@@ -56,7 +56,7 @@ class PaymentController extends Controller
         ]);
 
         if($validated->fails()){
-            return response()->json($validated->errors(), 400);
+            return back()->withInput()->with('errors', $validated->errors());
         }
 
         $setPayment = SetPayment::select('index_row')
@@ -87,7 +87,7 @@ class PaymentController extends Controller
                 $paymentStatus->save();
             }
 
-            return redirect('/group/'.$request->route('id').'/paymentadmin');
+            return redirect('/group/'.$request->route('id').'/paymentadmin')->with('success', 'Payment created successfully!');
         }
 
         $payment = new SetPayment();

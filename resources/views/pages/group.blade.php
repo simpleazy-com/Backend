@@ -2,6 +2,11 @@
 
 @section('content')
 <div class="konten">
+    @if(Session::has('success'))
+    <div class="alert alert-success mt-4">
+        <p>{{ session('success') }}</p>
+    </div>
+    @endif
     <div class="group-button">
         <div class="p-3"><a href="/group/create"><span class="fa fa-plus-square"></span> Tambah Group</a></div>
         <div class="p-3"><a href="/group/join"><span class="fa fa-sign-in-alt"></span> Gabung Group</a></div>
